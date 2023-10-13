@@ -1,0 +1,37 @@
+schema {
+  query: Query
+  mutation: Mutation
+  subscription: Subscription
+}
+
+type Message {
+  createdAt: String
+  messageId: String
+  author: String
+  content: String
+  chatId: String
+}
+
+type MessageResponse {
+  messages: [Message]
+  lastMessageKey: String
+}
+
+type Query {
+  getAllChatMessages(chatId: String, lastMessageKey: String): MessageResponse
+}
+
+type Mutation {
+  addNewMessage(
+    createdAt: String
+    messageId: String
+    author: String
+    content: String
+    chatId: String
+  ): Message
+  deleteMessage(messageId: String): String
+}
+
+type Subscription {
+  newMessage: Message @aws_subscribe(mutations: ["addNewMessage"])
+}
