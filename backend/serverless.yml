@@ -25,8 +25,10 @@ iamRoleStatements:
     Resource: "arn:aws:dynamodb:${aws:region}:*:*"
 
 functions:
-  graphql:
-    handler: handler.graphql
+  autoConfirm:
+    handler: functions/auto-confirm.handler
+  postSignUp:
+    handler: functions/post-signup.handler
 
 appSync:
   name: appsync-chat-api
@@ -111,6 +113,16 @@ resources:
       Type: AWS::Cognito::UserPool
       Properties:
         UserPoolName: cognito-appsync-chat_user_pool
+        UsernameAttributes:
+          - email
+        Schema:
+          - Name: "username"
+            Mutable: true
+            AttributeDataType: String
+        LambdaConfig:
+          PreSignUp: !Sub "arn:aws:lambda:${aws:region}:${aws:accountId}:function:appsync-chat-dev-autoConfirm"
+          PostConfirmation: !Sub "arn:aws:lambda:${aws:region}:${aws:accountId}:function:appsync-chat-dev-postSignUp"
+
     # Cognito - Client
     CognitoUserPoolClient:
       Type: AWS::Cognito::UserPoolClient
@@ -205,6 +217,22 @@ resources:
                     - "cognito-identity:*"
                   Resource: "*"
 
+    PreSignUpInvocationPermission:
+      Type: AWS::Lambda::Permission
+      Properties:
+        Action: lambda:InvokeFunction
+        FunctionName: !Sub "arn:aws:lambda:${aws:region}:${aws:accountId}:function:appsync-chat-dev-autoConfirm"
+        Principal: cognito-idp.amazonaws.com
+        SourceArn: {Fn::GetAtt: [CognitoUserPool, Arn]}
+
+    PostConfirmationInvocationPermission:
+      Type: AWS::Lambda::Permission
+      Properties:
+        Action: lambda:InvokeFunction
+        FunctionName: !Sub "arn:aws:lambda:${aws:region}:${aws:accountId}:function:appsync-chat-dev-postSignUp"
+        Principal: cognito-idp.amazonaws.com
+        SourceArn: {Fn::GetAtt: [CognitoUserPool, Arn]}
+
     chatMessagesTable:
       Type: AWS::DynamoDB::Table
       Properties:
@@ -236,6 +264,33 @@ resources:
       Type: AWS::DynamoDB::Table
       Properties:
         TableName: ${self:service}-members
+        AttributeDefinitions:
+          - AttributeName: PK
+            AttributeType: S
+          - AttributeName: SK
+            AttributeType: S
+          - AttributeName: GSI1
+            AttributeType: S
+        KeySchema:
+          - AttributeName: PK
+            KeyType: HASH
+          - AttributeName: SK
+            KeyType: RANGE
+        BillingMode: PAY_PER_REQUEST
+        GlobalSecondaryIndexes:
+          - IndexName: GSI1
+            KeySchema:
+              - AttributeName: GSI1
+                KeyType: HASH
+              - AttributeName: SK
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+
+    appMembersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:service}-app-members
         AttributeDefinitions:
           - AttributeName: PK
             AttributeType: S
