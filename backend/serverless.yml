@@ -10,19 +10,6 @@ provider:
   runtime: nodejs18.x
 
 iamRoleStatements:
-  # - Effect: Allow
-  #   Action:
-  #     - lambda:*
-  #   Resource: "*"
-  # - Effect: Allow
-  #   Action:
-  #     - dynamodb:Query
-  #     - dynamodb:Scan
-  #     - dynamodb:GetItem
-  #     - dynamodb:PutItem
-  #     - dynamodb:UpdateItem
-  #     - dynamodb:DeleteItem
-  #   Resource: "arn:aws:dynamodb:${aws:region}:*:*"
   - Effect: Allow
     Action:
       - dynamodb:BatchGetItem
@@ -251,14 +238,6 @@ resources:
         FunctionName: !Sub "arn:aws:lambda:${aws:region}:${aws:accountId}:function:appsync-chat-dev-postSignUp"
         Principal: cognito-idp.amazonaws.com
         SourceArn: {Fn::GetAtt: [CognitoUserPool, Arn]}
-
-    # PostConfirmationInvocationDynamoPermission:
-    #   Type: AWS::DynamoDB::Permission
-    #   Properties:
-    #     Action: dynamodb:PutItem
-    #     FunctionName: !Sub "arn:aws:lambda:${aws:region}:${aws:accountId}:function:appsync-chat-dev-postSignUp"
-    #     Principal: cognito-idp.amazonaws.com
-    #     SourceArn: {Fn::GetAtt: [CognitoUserPool, Arn]}
 
     CustomLambdaDynamoRole:
       Type: AWS::IAM::Role
