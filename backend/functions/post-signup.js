@@ -6,10 +6,11 @@ const {v4: uuidv4} = require("uuid");
 
 const postSignUp = async (event) => {
   console.log(JSON.stringify(event));
+
   if (event.request.userAttributes.email) {
     try {
       const params = {
-        TableName: `appsync-chat-app-members`,
+        TableName: "appsync-chat-app-members",
         Item: {
           PK: `member_${uuidv4()}`,
           SK: Date.now(),
@@ -20,6 +21,7 @@ const postSignUp = async (event) => {
 
       await db.put(params).promise();
     } catch (e) {
+      console.log(e);
       return e;
     }
   }

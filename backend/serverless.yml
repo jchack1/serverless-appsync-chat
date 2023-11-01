@@ -10,25 +10,44 @@ provider:
   runtime: nodejs18.x
 
 iamRoleStatements:
+  # - Effect: Allow
+  #   Action:
+  #     - lambda:*
+  #   Resource: "*"
+  # - Effect: Allow
+  #   Action:
+  #     - dynamodb:Query
+  #     - dynamodb:Scan
+  #     - dynamodb:GetItem
+  #     - dynamodb:PutItem
+  #     - dynamodb:UpdateItem
+  #     - dynamodb:DeleteItem
+  #   Resource: "arn:aws:dynamodb:${aws:region}:*:*"
   - Effect: Allow
     Action:
-      - lambda:*
-    Resource: "*"
-  - Effect: Allow
-    Action:
+      - dynamodb:BatchGetItem
+      - dynamodb:GetItem
       - dynamodb:Query
       - dynamodb:Scan
-      - dynamodb:GetItem
+      - dynamodb:BatchWriteItem
       - dynamodb:PutItem
       - dynamodb:UpdateItem
-      - dynamodb:DeleteItem
-    Resource: "arn:aws:dynamodb:${aws:region}:*:*"
+    Resource: arn:aws:dynamodb:${aws:region}:*:*"
+  - Effect: Allow
+    Action:
+      - logs:CreateLogStream
+      - logs:PutLogEvents
+    Resource: arn:aws:logs:eu-west-1:123456789012:*
+  - Effect: Allow
+    Action: logs:CreateLogGroup
+    Resource: "*"
 
 functions:
   autoConfirm:
     handler: functions/auto-confirm.handler
   postSignUp:
     handler: functions/post-signup.handler
+    role: CustomLambdaDynamoRole
 
 appSync:
   name: appsync-chat-api
@@ -225,13 +244,61 @@ resources:
         Principal: cognito-idp.amazonaws.com
         SourceArn: {Fn::GetAtt: [CognitoUserPool, Arn]}
 
-    PostConfirmationInvocationPermission:
+    PostConfirmationInvocationLambdaPermission:
       Type: AWS::Lambda::Permission
       Properties:
         Action: lambda:InvokeFunction
         FunctionName: !Sub "arn:aws:lambda:${aws:region}:${aws:accountId}:function:appsync-chat-dev-postSignUp"
         Principal: cognito-idp.amazonaws.com
         SourceArn: {Fn::GetAtt: [CognitoUserPool, Arn]}
+
+    # PostConfirmationInvocationDynamoPermission:
+    #   Type: AWS::DynamoDB::Permission
+    #   Properties:
+    #     Action: dynamodb:PutItem
+    #     FunctionName: !Sub "arn:aws:lambda:${aws:region}:${aws:accountId}:function:appsync-chat-dev-postSignUp"
+    #     Principal: cognito-idp.amazonaws.com
+    #     SourceArn: {Fn::GetAtt: [CognitoUserPool, Arn]}
+
+    CustomLambdaDynamoRole:
+      Type: AWS::IAM::Role
+      Properties:
+        Path: /
+        RoleName: CustomLambdaDynamoRole
+        AssumeRolePolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service:
+                  - lambda.amazonaws.com
+              Action: sts:AssumeRole
+        Policies:
+          - PolicyName: MyLambdaPolicy
+            PolicyDocument:
+              Version: "2012-10-17"
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - logs:CreateLogGroup
+                    - logs:CreateLogStream
+                    - logs:PutLogEvents
+                    - logs:TagResource
+                  Resource:
+                    - "Fn::Join":
+                        - ":"
+                        - - "arn:aws:logs"
+                          - Ref: "AWS::Region"
+                          - Ref: "AWS::AccountId"
+                          - "log-group:/aws/lambda/*:*:*"
+          - PolicyName: MyDynamoDBPolicy
+            PolicyDocument:
+              Version: "2012-10-17"
+              Statement:
+                - Effect: "Allow"
+                  Action:
+                    - "dynamodb:*"
+                  Resource: "arn:aws:dynamodb:${aws:region}:*:*"
 
     chatMessagesTable:
       Type: AWS::DynamoDB::Table
@@ -295,7 +362,7 @@ resources:
           - AttributeName: PK
             AttributeType: S
           - AttributeName: SK
-            AttributeType: S
+            AttributeType: N
           - AttributeName: GSI1
             AttributeType: S
         KeySchema:
