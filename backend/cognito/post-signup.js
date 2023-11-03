@@ -14,7 +14,7 @@ const postSignUp = async (event) => {
         Item: {
           PK: `member_${uuidv4()}`,
           SK: Date.now(),
-          username: event.request.userAttributes["custom:username"], //still need to add username field in frontend
+          username: event.request.userAttributes["custom:username"],
           GSI1: event.request.userAttributes.email,
         },
       };

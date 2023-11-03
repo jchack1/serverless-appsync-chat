@@ -17,8 +17,15 @@ type MessageResponse {
   lastMessageKey: String
 }
 
+type Member {
+  memberId: String
+  email: String
+  username: String
+}
+
 type Query {
   getAllChatMessages(chatId: String, lastMessageKey: String): MessageResponse
+  getMember(email: String): Member
 }
 
 type Mutation {

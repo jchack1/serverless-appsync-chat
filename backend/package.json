@@ -3,6 +3,7 @@
   "description": "backend to simple chat app built with appsync",
   "author": "julia h",
   "dependencies": {
+    "@aws-appsync/utils": "^1.5.0",
     "serverless-appsync-plugin": "^2.4.0",
     "typescript": "^5.2.2",
     "uuid": "^9.0.1"

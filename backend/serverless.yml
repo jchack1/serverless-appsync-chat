@@ -8,6 +8,10 @@ plugins:
 provider:
   name: aws
   runtime: nodejs18.x
+  environment:
+    MESSAGES_TABLE: ${self:service}-messages
+    CHAT_MEMBERS_TABLE: ${self:service}-members
+    APP_MEMBERS_TABLE: ${self:service}-app-members
 
 iamRoleStatements:
   - Effect: Allow
@@ -31,9 +35,9 @@ iamRoleStatements:
 
 functions:
   autoConfirm:
-    handler: functions/auto-confirm.handler
+    handler: cognito/auto-confirm.handler
   postSignUp:
-    handler: functions/post-signup.handler
+    handler: cognito/post-signup.handler
     role: CustomLambdaDynamoRole
 
 appSync:
@@ -50,7 +54,11 @@ appSync:
     Query.getAllChatMessages:
       dataSource: chatMessagesDataSource
       kind: UNIT
-      code: messages/getAllChatMessages.ts
+      code: messages/getAllChatMessages.js
+    Query.getMember:
+      dataSource: appMembersDataSource
+      kind: UNIT
+      code: members/getMember.js
 
   dataSources:
     chatMessagesDataSource:
@@ -68,6 +76,17 @@ appSync:
       type: AMAZON_DYNAMODB
       config:
         tableName: {Ref: chatMembersTable}
+        serviceRoleArn: {Fn::GetAtt: [AppSyncDynamoDBServiceRole, Arn]}
+        iamRoleStatements:
+          - Effect: "Allow"
+            Action:
+              - "dynamodb:*"
+            Resource: "arn:aws:dynamodb:${aws:region}:*:*"
+
+    appMembersDataSource:
+      type: AMAZON_DYNAMODB
+      config:
+        tableName: {Ref: appMembersTable}
         serviceRoleArn: {Fn::GetAtt: [AppSyncDynamoDBServiceRole, Arn]}
         iamRoleStatements:
           - Effect: "Allow"
