@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {BrowserRouter, Routes, Route, Link} from "react-router-dom";
+import {Routes, Route} from "react-router-dom";
 import AuthComp from "./AuthComp";
 import ChatHome from "./ChatHome";
 //import all pages here, wrap in auth
@@ -14,7 +14,6 @@ const App = () => {
 };
 
 const Home = () => {
-  //auth component wraps app, somthing like this:
   return (
     <AuthComp>
       <App />

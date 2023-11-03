@@ -1,7 +1,18 @@
 import React, {useState} from "react";
-import {Auth} from "aws-amplify";
+import {Auth, API, graphqlOperation} from "aws-amplify";
 import {Link} from "react-router-dom";
 import {FormContainer, Input, Label} from "../components/FormComponents";
+
+const getMember = `query getMember(
+  $email: String
+) {
+  getMember(email: $email) {
+      memberId
+      email
+      username
+  }
+}
+`;
 
 function validateEmail(email) {
   const re =
@@ -37,9 +48,20 @@ const Login = ({updateIsAuthenticated}) => {
         return false;
       }
 
+      // log them in with cognito
       const user = await Auth.signIn(email, password);
 
       if (user) updateIsAuthenticated(true);
+
+      //get their member data from dynamo db
+      const memberData = await API.graphql(
+        graphqlOperation(getMember, {
+          email,
+        })
+      );
+
+      //add to session storage
+      sessionStorage.setItem("memberData", memberData);
     } catch (e) {
       updateLoginError(e.message);
       updatePassword("");

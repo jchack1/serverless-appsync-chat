@@ -64,6 +64,8 @@ const Signup = () => {
       if (user) navigate("/");
     } catch (e) {
       console.log("error signing up:", e);
+      updatePassword("");
+      updateConfirmPassword("");
       updateSignupError(e.message);
     }
   };
