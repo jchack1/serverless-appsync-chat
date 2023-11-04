@@ -59,6 +59,10 @@ appSync:
       dataSource: appMembersDataSource
       kind: UNIT
       code: members/getMember.js
+    Mutation.addNewMessage:
+      dataSource: chatMessagesDataSource
+      kind: UNIT
+      code: messages/addNewMessage.js
 
   dataSources:
     chatMessagesDataSource:

@@ -30,7 +30,6 @@ type Query {
 
 type Mutation {
   addNewMessage(
-    createdAt: String
     messageId: String
     author: String
     content: String
