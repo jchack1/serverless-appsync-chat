@@ -1,36 +1,16 @@
-// import {util} from "@aws-appsync/utils";
-// import {v4 as uuidv4} from "uuid";
-
 export function request(ctx) {
-  // const chatId = `chat_${uuidv4()}`;
-
-  // return {
-  //   operation: "BatchPutItem",
-  //   tables: {
-  //     chatMembersTable: ctx.args.newMembers.map((member) =>
-  //       util.dynamodb.toMapValues({
-  //         PK: member.memberId,
-  //         SK: `chat#${chatId}#${member.memberId}`,
-  //         username: member.username,
-  //         GSI1: chatId,
-  //         lastMessage: 0,
-  //       })
-  //     ),
-  //   },
-  // };
-
   return {
     operation: "Invoke",
-    payload: {field: "newMembers", arguments: ctx.args.input.newMembers},
+    payload: {field: "addNewChat", arguments: ctx.args.input},
   };
 }
 
 export function response(ctx) {
-  if (ctx.error) return ctx.error;
+  const {error, result} = ctx;
 
-  const data = ctx.result.data;
+  if (error) {
+    return util.appendError(error.message, error.type, result);
+  }
 
-  console.log(data);
-
-  return data;
+  return result;
 }

@@ -12,7 +12,6 @@ export function request(ctx) {
 }
 
 export function response(ctx) {
-  // return ctx.prev.result;
   if (ctx.error) return ctx.error;
 
   if (ctx.result.items.length === 0) {

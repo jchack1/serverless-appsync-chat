@@ -103,6 +103,7 @@ appSync:
         function:
           timeout: 30
           handler: "members/addNewChat/addNewChatLambda.handler"
+          role: CustomLambdaDynamoRole
 
     appMembersDataSource:
       type: AMAZON_DYNAMODB
@@ -121,6 +122,7 @@ appSync:
         function:
           timeout: 30
           handler: "members/getMembersChats/getMembersChatsLambda.handler"
+          role: CustomLambdaDynamoRole
 
 resources:
   Resources:

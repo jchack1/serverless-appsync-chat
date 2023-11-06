@@ -1,4 +1,3 @@
-// import {AddMembersToNewChatInput} from "../_types/index";
 const {v4: uuidv4} = require("uuid");
 
 const AWS = require("aws-sdk");
@@ -14,26 +13,20 @@ const dynamo = new AWS.DynamoDB.DocumentClient({
  *
  */
 const addChatMember = async (data) => {
-  try {
-    const params = {
-      TableName: process.env.CHAT_MEMBERS_TABLE,
-      Item: {
-        PK: data.memberId,
-        SK: `chat#${data.chatId}#${data.memberId}`,
-        displayName: data.displayName,
-        GSI1: data.chatId,
-        lastMessage: data.lastMessage,
-      },
-    };
+  const params = {
+    TableName: process.env.CHAT_MEMBERS_TABLE,
+    Item: {
+      PK: data.memberId,
+      SK: `chat#${data.chatId}#${data.memberId}`,
+      username: data.username,
+      GSI1: data.chatId,
+      lastMessage: data.lastMessage,
+    },
+  };
 
-    const result = await dynamo.put(params).promise();
+  await dynamo.put(params).promise();
 
-    console.log(`addChatMember result: ${JSON.stringify(result)}`);
-
-    return true;
-  } catch (e) {
-    return e;
-  }
+  return true;
 };
 
 /**
@@ -42,23 +35,31 @@ const addChatMember = async (data) => {
  * takes in new members, creates a new chatId, adds new chatMembers to database
  *
  */
-const addNewChatLambda = async (newMembers) => {
-  try {
-    const chatId = `chat_${uuidv4()}`;
 
-    for (const member of newMembers) {
-      await addChatMember({
-        memberId: member.memberId,
-        lastMessage: 0,
-        chatId,
-        displayName: member.displayName,
-      });
-    }
+// payload has this format:
+// {
+//   "version": "2018-05-29",
+//   "operation": "Invoke",
+//   "payload": {
+//       "arguments": {
+//           "id": "postId1"
+//       }
+//   }
+// }
+const addNewChatLambda = async (payload) => {
+  const newMembers = payload.arguments.newMembers;
+  const chatId = `chat_${uuidv4()}`;
 
-    return true;
-  } catch (e) {
-    return e;
+  for (const member of newMembers) {
+    await addChatMember({
+      memberId: member.memberId,
+      lastMessage: 0,
+      chatId,
+      username: member.username,
+    });
   }
+
+  return true;
 };
 
 module.exports.handler = addNewChatLambda;
