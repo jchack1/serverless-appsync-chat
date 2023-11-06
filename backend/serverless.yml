@@ -59,10 +59,20 @@ appSync:
       dataSource: appMembersDataSource
       kind: UNIT
       code: members/getMember.js
+    Query.getMembersChats:
+      dataSource: getMembersChatsDataSource
+      kind: UNIT
+      code: members/getMembersChats/getMembersChatsResolver.js
     Mutation.addNewMessage:
       dataSource: chatMessagesDataSource
       kind: UNIT
       code: messages/addNewMessage.js
+    Mutation.addNewChat:
+      # dataSource: chatMembersDataSource
+      dataSource: chatMembersLambdaDataSource
+      kind: UNIT
+      # code: members/addNewChat.js
+      code: members/addNewChat/addNewChatResolver.js
 
   dataSources:
     chatMessagesDataSource:
@@ -87,6 +97,13 @@ appSync:
               - "dynamodb:*"
             Resource: "arn:aws:dynamodb:${aws:region}:*:*"
 
+    chatMembersLambdaDataSource:
+      type: "AWS_LAMBDA"
+      config:
+        function:
+          timeout: 30
+          handler: "members/addNewChat/addNewChatLambda.handler"
+
     appMembersDataSource:
       type: AMAZON_DYNAMODB
       config:
@@ -97,6 +114,13 @@ appSync:
             Action:
               - "dynamodb:*"
             Resource: "arn:aws:dynamodb:${aws:region}:*:*"
+
+    getMembersChatsDataSource:
+      type: "AWS_LAMBDA"
+      config:
+        function:
+          timeout: 30
+          handler: "members/getMembersChats/getMembersChatsLambda.handler"
 
 resources:
   Resources:

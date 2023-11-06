@@ -17,15 +17,36 @@ type MessageResponse {
   lastMessageKey: String
 }
 
-type Member {
+type MemberWithEmail {
   memberId: String
   email: String
   username: String
 }
 
+type Member {
+  memberId: String
+  username: String
+}
+
+input NewMemberInput {
+  memberId: String
+  username: String
+}
+
+type MemberChat {
+  chatId: String
+  members: [Member]
+  lastMessage: String
+}
+
+input AddNewChatInput {
+  newMembers: [NewMemberInput]
+}
+
 type Query {
   getAllChatMessages(chatId: String, lastMessageKey: String): MessageResponse
-  getMember(email: String): Member
+  getMember(email: String): MemberWithEmail
+  getMembersChats(memberId: String): [MemberChat]
 }
 
 type Mutation {
@@ -36,6 +57,7 @@ type Mutation {
     chatId: String
   ): Message
   deleteMessage(messageId: String): String
+  addNewChat(input: AddNewChatInput): Boolean
 }
 
 type Subscription {
