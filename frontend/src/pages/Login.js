@@ -54,14 +54,19 @@ const Login = ({updateIsAuthenticated}) => {
       if (user) updateIsAuthenticated(true);
 
       //get their member data from dynamo db
-      const memberData = await API.graphql(
+      const {data, errors} = await API.graphql(
         graphqlOperation(getMember, {
           email,
         })
       );
 
-      //add to session storage
-      sessionStorage.setItem("memberData", memberData);
+      if (errors) {
+        throw new Error(errors[0]);
+      }
+
+      sessionStorage.setItem("memberId", data.getMember.memberId);
+      sessionStorage.setItem("email", data.getMember.email);
+      sessionStorage.setItem("username", data.getMember.username);
     } catch (e) {
       updateLoginError(e.message);
       updatePassword("");
