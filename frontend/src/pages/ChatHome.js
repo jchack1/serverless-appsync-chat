@@ -14,6 +14,8 @@ import {CONNECTION_STATE_CHANGE} from "@aws-amplify/pubsub";
 
 const lightBlue = "#f5f6fc";
 const mediumBlue = "#dce1f7";
+const borderGray = "#383838";
+const backgroundGray = "#262626";
 
 const getMembersChats = `query getMembersChats(
   $memberId: String
@@ -29,13 +31,16 @@ const getMembersChats = `query getMembersChats(
 }
 `;
 
+const ChatHomeContainer = styled.div`
+  max-width: 1000px;
+  margin: 0 auto;
+`;
 const NoChats = styled.div`
-  border: 1px solid ${mediumBlue};
-  background: ${lightBlue};
+  border: 1px solid ${backgroundGray};
+  background: ${backgroundGray};
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: "Lato", sans-serif;
   font-size: 14px;
   height: 500px;
   width: 100%;
@@ -150,10 +155,9 @@ const ChatHome = () => {
   if (graphqlError) {
     return <div>there was an error</div>;
   }
-  console.log(`chats: ${chats}`);
 
   return (
-    <div>
+    <ChatHomeContainer>
       <h1>Chats Home</h1>
       <div style={{display: "flex", height: "500px"}}>
         {chats.length > 0 ? (
@@ -183,7 +187,7 @@ const ChatHome = () => {
           </NoChats>
         )}
       </div>
-    </div>
+    </ChatHomeContainer>
   );
 };
 

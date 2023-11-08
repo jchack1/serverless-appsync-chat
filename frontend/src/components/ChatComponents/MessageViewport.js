@@ -5,26 +5,26 @@ import {API, graphqlOperation} from "aws-amplify";
 
 const blue = "#1a54f3";
 const lightBlue = "#f5f6fc";
+const borderGray = "#383838";
+const backgroundGray = "#262626";
 
 // components and styling
 
 const containerStyles = {
   display: "flex",
   flexDirection: "column",
-  border: `1px solid ${lightBlue}`,
+  border: `1px solid ${backgroundGray}`,
   padding: "8%",
   overflowY: "auto",
   fontSize: "12px",
-  fontFamily: "Lato, sans-serif",
-  background: `${lightBlue}`,
+  background: `${backgroundGray}`,
   height: "100%",
 };
 
 const MessageContainer = styled.div`
-  border: 1px solid ${lightBlue};
+  border: 1px solid ${backgroundGray};
   font-size: 12px;
-  font-family: "Lato", sans-serif;
-  background: ${lightBlue};
+  background: ${backgroundGray};
   position: relative;
   display: flex;
   flex-direction: column;
@@ -57,7 +57,7 @@ const SingleMessageContainer = styled.div`
   margin-bottom: 30px;
   align-self: ${(props) => (props.self ? "flex-end" : "flex-start")};
   max-width: 250px;
-  background: ${(props) => (props.self ? "#dce1f7" : "#fff")};
+  background: ${(props) => (props.self ? "#444c96" : "#2b2e4d")};
   padding: 15px;
   border-radius: ${(props) =>
     props.self ? "10px 10px 0 10px" : "10px 10px 10px 0"};
@@ -65,7 +65,6 @@ const SingleMessageContainer = styled.div`
 
 const Author = styled.p`
   margin: 0 0 5px 0;
-  font-family: "Lato", sans-serif;
 
   font-size: 14px;
   font-weight: 600px;
@@ -73,7 +72,6 @@ const Author = styled.p`
 
 const DateTime = styled.div`
   margin: 0 0 10px 0;
-  font-family: "Lato", sans-serif;
 
   font-size: 10px;
   font-weight: 300;
@@ -81,7 +79,6 @@ const DateTime = styled.div`
 
 const Content = styled.div`
   margin: 0 0 10px 0;
-  font-family: "Lato", sans-serif;
 
   font-size: 12px;
   max-width: 60ch;
@@ -200,6 +197,10 @@ const MessageViewport = ({
       })
     );
 
+    olderMessages.data.getAllChatMessages.messages.forEach((msg) => {
+      msg.createdAt = new Date(msg.createdAt).getTime();
+    });
+
     const sortedOlderMessages =
       olderMessages.data.getAllChatMessages.messages.sort((a, b) => {
         return Number(a.createdAt) - Number(b.createdAt);
@@ -211,6 +212,10 @@ const MessageViewport = ({
   };
 
   useEffect(() => {
+    messages.forEach((msg) => {
+      msg.createdAt = new Date(msg.createdAt).getTime();
+    });
+
     const sorted = messages.sort((a, b) => {
       return Number(a.createdAt) - Number(b.createdAt);
     });
@@ -236,6 +241,7 @@ const MessageViewport = ({
       }
       //add newMessage to sortedMessages
       if (sortedMessages && Object.keys(newMessage).length > 0) {
+        newMessage.createdAt = new Date(newMessage.createdAt).getTime();
         const updatedMessages = [...sortedMessages, newMessage];
         updateSortedMessages(updatedMessages);
       }
@@ -306,13 +312,14 @@ const MessageViewport = ({
 
         {sortedMessages !== false ? (
           sortedMessages.map((message, i) => {
+            // console.dir(message);
             return (
               <SingleMessageContainer
                 key={i}
                 self={selfMemberId === message.author}
               >
                 <Author>{memberMap[message.author]}</Author>
-                {/* <DateTime>{formatTimestamp(message.createdAt)}</DateTime> */}
+                <DateTime>{formatTimestamp(message.createdAt)}</DateTime>
                 <Content>{message.content}</Content>
               </SingleMessageContainer>
             );

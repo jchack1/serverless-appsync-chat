@@ -8,18 +8,19 @@ import {API, graphqlOperation} from "aws-amplify";
 const blue = "#1a54f3";
 const lightBlue = "#f5f6fc";
 const mediumBlue = "#dce1f7";
+const backgroundGray = "#262626";
+const messageBoxGray = "#383838";
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  width: 70%;
+  width: 75%;
   height: 500px;
-  background: ${lightBlue};
+  background: ${backgroundGray};
 `;
 
 const PreLoadContainer = styled(Container)`
-  border: 1px solid ${mediumBlue};
-  font-family: Lato, sans-serif;
+  border: 1px solid ${backgroundGray};
   font-size: 12px;
 `;
 
@@ -27,11 +28,11 @@ const TextAreaContainer = styled.div`
   width: 92%;
   height: 20%;
   display: flex;
-  border: 1px solid ${mediumBlue};
+  border: 1px solid ${backgroundGray};
   align-self: center;
   margin-bottom: 30px;
   border-radius: 10px;
-  background: #fff;
+  background: ${messageBoxGray};
 `;
 
 const TextInput = styled.textarea`
@@ -40,6 +41,7 @@ const TextInput = styled.textarea`
   border: none;
   resize: none;
   background: none;
+  color: #f2f2f2;
 `;
 
 const SendButton = styled.button`

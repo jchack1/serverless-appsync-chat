@@ -4,11 +4,13 @@ import styled from "styled-components";
 const blue = "#1a54f3";
 const lightBlue = "#f5f6fc";
 const mediumBlue = "#dce1f7";
+const borderGray = "#383838";
+const backgroundGray = "#262626";
 
 const ChatListContainer = styled.div`
-  width: 30%;
+  width: 25%;
   height: 100%;
-  border: 1px solid ${mediumBlue};
+  border: 1px solid ${backgroundGray};
   overflow-y: auto;
 `;
 
@@ -16,11 +18,10 @@ const ChatNameContainer = styled.div`
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  font-family: "Lato", sans-serif;
   font-size: 14px;
   height: 80px;
   padding: 30px;
-  background: ${(props) => (props.selected ? `${lightBlue}` : "none")};
+  background: ${(props) => (props.selected ? `${backgroundGray}` : "none")};
 
   svg {
     width: 30px;
