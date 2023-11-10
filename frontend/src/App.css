@@ -1,7 +1,42 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap");
+@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css");
 
 body {
   font-family: "Roboto", sans-serif;
+  font-size: 1rem;
   background: #212121;
   color: #f2f2f2;
+}
+
+a {
+  color: blue;
+}
+
+h1 {
+  font-size: 1.5rem;
+  margin-top: 50px;
+}
+
+.loading {
+  align-self: center;
+}
+
+.loading {
+  font-size: 30px;
+  animation: loading-spin infinite 2s cubic-bezier(0.5, 0.7, 0.3, 0.5);
+}
+
+.user-icon {
+  color: blue;
+  font-size: 40px;
+  margin-right: 10px;
+}
+
+@keyframes loading-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }

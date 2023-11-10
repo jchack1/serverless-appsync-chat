@@ -4,7 +4,7 @@ import {v4 as uuidv4} from "uuid";
 import {addNewMessage} from "./graphql";
 import MessageViewport from "./MessageViewport";
 import {API, graphqlOperation} from "aws-amplify";
-
+import Spinner from "../Spinner";
 const blue = "#1a54f3";
 const lightBlue = "#f5f6fc";
 const mediumBlue = "#dce1f7";
@@ -155,9 +155,9 @@ const MessageArea = ({
     return (
       <PreLoadContainer>
         <div
-          style={{display: "flex", justifyContent: "center", marginTop: "50px"}}
+          style={{display: "flex", justifyContent: "center", margin: "auto"}}
         >
-          Loading...
+          <Spinner />
         </div>
       </PreLoadContainer>
     );

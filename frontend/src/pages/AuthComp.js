@@ -5,7 +5,7 @@ import Login from "./Login";
 const AuthComp = (props) => {
   const [isAuthenticated, updateIsAuthenticated] = useState(false);
 
-  if (isAuthenticated === true || sessionStorage.getItem("memberId")) {
+  if (isAuthenticated === true || sessionStorage.getItem("memberId") !== null) {
     return <div>{props.children}</div>;
   }
 

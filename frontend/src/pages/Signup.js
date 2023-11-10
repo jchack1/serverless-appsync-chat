@@ -3,6 +3,8 @@ import {Auth} from "aws-amplify";
 import {Link} from "react-router-dom";
 import {useNavigate} from "react-router-dom";
 import {FormContainer, Input, Label} from "../components/FormComponents";
+import Button from "../components/Button";
+import Spinner from "../components/Spinner";
 
 function validateEmail(email) {
   const re =
@@ -18,31 +20,41 @@ const Signup = () => {
   const [password, updatePassword] = useState("");
   const [confirmPassword, updateConfirmPassword] = useState("");
   const [signupError, updateSignupError] = useState("");
+  const [buttonText, updateButtonText] = useState("Sign up");
+  const [loading, updateLoading] = useState(false);
 
   const handleSignup = async () => {
     //redirect to login once signup complete
 
     try {
       //validation
-
+      updateLoading(true);
       updateSignupError("");
 
       if (password.length === 0) {
         updateSignupError("Please enter a password");
+        updateLoading(false);
+
         return false;
       }
       if (password !== confirmPassword) {
         updateSignupError("Passwords do not match");
+        updateLoading(false);
+
         return false;
       }
 
       if (email.length === 0) {
         updateSignupError("Email must be filled in");
+        updateLoading(false);
+
         return false;
       }
 
       if (username.length === 0) {
         updateSignupError("Please choose a username");
+        updateLoading(false);
+
         return false;
       }
 
@@ -50,6 +62,8 @@ const Signup = () => {
         updateSignupError(
           "Email address must be valid format, e.g. name@example.com"
         );
+        updateLoading(false);
+
         return false;
       }
 
@@ -61,8 +75,15 @@ const Signup = () => {
         },
       });
 
-      if (user) navigate("/");
+      updateLoading(false);
+      if (user) {
+        updateButtonText("sign-up successful, redirecting...");
+        setTimeout(() => {
+          navigate("/");
+        }, 2500);
+      }
     } catch (e) {
+      updateLoading(false);
       console.log("error signing up:", e);
       updatePassword("");
       updateConfirmPassword("");
@@ -72,7 +93,7 @@ const Signup = () => {
 
   return (
     <div>
-      <p style={{textAlign: "center"}}>signup page</p>
+      <h1 style={{textAlign: "center"}}>Create an account</h1>
 
       <FormContainer>
         <Label htmlFor="email">Email</Label>
@@ -110,9 +131,9 @@ const Signup = () => {
           onChange={(e) => updateConfirmPassword(e.target.value)}
         ></Input>
 
-        <button type="submit" onClick={() => handleSignup()}>
-          Sign up
-        </button>
+        <Button type="submit" onClick={() => handleSignup()}>
+          {loading ? <Spinner /> : buttonText}
+        </Button>
 
         <p>
           already have an account? <Link to={"/"}>log in here</Link>

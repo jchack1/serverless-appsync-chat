@@ -5,6 +5,7 @@ import {API, graphqlOperation, Hub} from "aws-amplify";
 
 import ChatList from "../components/ChatComponents/ChatList";
 import MessageArea from "../components/ChatComponents/MessageArea";
+import Spinner from "../components/Spinner";
 
 import {
   getAllChatMessages,
@@ -33,7 +34,14 @@ const getMembersChats = `query getMembersChats(
 
 const ChatHomeContainer = styled.div`
   max-width: 1000px;
-  margin: 0 auto;
+  margin: 15vh auto;
+`;
+
+const LoadingContainer = styled.div`
+  margin-top: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 const NoChats = styled.div`
   border: 1px solid ${backgroundGray};
@@ -149,16 +157,20 @@ const ChatHome = () => {
   }, [chosenChat]);
 
   if (loading) {
-    return <div>loading</div>;
+    return (
+      <LoadingContainer>
+        <Spinner />
+      </LoadingContainer>
+    );
   }
 
   if (graphqlError) {
-    return <div>there was an error</div>;
+    console.log(graphqlError);
+    return <ChatHomeContainer>there was an error</ChatHomeContainer>;
   }
 
   return (
     <ChatHomeContainer>
-      <h1>Chats Home</h1>
       <div style={{display: "flex", height: "500px"}}>
         {chats.length > 0 ? (
           <>

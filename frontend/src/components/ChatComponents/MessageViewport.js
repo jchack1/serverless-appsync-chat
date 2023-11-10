@@ -2,6 +2,7 @@ import React, {useState, useRef, useEffect} from "react";
 import styled from "styled-components";
 import {getAllChatMessages} from "./graphql";
 import {API, graphqlOperation} from "aws-amplify";
+import Spinner from "../Spinner";
 
 const blue = "#1a54f3";
 const lightBlue = "#f5f6fc";
@@ -295,7 +296,7 @@ const MessageViewport = ({
             onClick={() => handleLoadOlderMessages(chatId, lastMessageKey)}
           >
             {loadingOlderMessages ? (
-              <div style={{width: "20px"}}>Loading...</div>
+              <Spinner />
             ) : (
               <>
                 {" "}
@@ -325,7 +326,7 @@ const MessageViewport = ({
             );
           })
         ) : (
-          <div style={{width: "20px"}}>Loading...</div>
+          <Spinner />
         )}
 
         {/* to track if user scrolled to bottom of container */}

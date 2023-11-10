@@ -1,7 +1,10 @@
 front-end todos:
 
-- fetch user data upon login
-- figure out user sessions, storing their data, after how long to log out
-- navigation, logout
+- fetch user data upon login - DONE
+- loading spinner - DONE
+- figure out user sessions, storing their data - DONE
+- after how long to log user out?
+- navigation, logout button
 - chat components including way to create new chats and search for friends
-- general styling
+- general styling, fix colours
+- create variables for colours that can be imported throughout the app - is there a way to do this especially for styled-components

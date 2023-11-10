@@ -3,3 +3,5 @@ note for future task: to create a new chat, users should require the email addre
 other tasks:
 
 - migrate js functions to ts
+- consider reorganizing folder structure so it is more clear where functions and resolvers are
+- create functionality to delete, update members/messages - and implement on frontend
