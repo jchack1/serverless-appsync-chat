@@ -1,14 +1,12 @@
 import styled from "styled-components";
-
-const backgroundGray = "#262626";
-const messageBoxGray = "#383838";
+import {mediumGray, lightRed} from "../styles/Colors";
 
 const FormContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
   margin: 0 auto;
-  margin-top: 50px;
+  margin-top: 20px;
   width: 80vw;
   max-width: 600px;
 `;
@@ -24,8 +22,8 @@ const Input = styled.input`
   border-radius: 4px;
   outline: none;
   color: white;
-  background-color: ${messageBoxGray};
-  border: 1px solid ${messageBoxGray};
+  background-color: ${mediumGray};
+  border: 1px solid ${mediumGray};
   font-size: 0.8rem;
 
   &:focus {
@@ -39,4 +37,17 @@ const InputContainer = styled.div`
   margin-bottom: 20px;
 `;
 
-export {FormContainer, Input, Label, InputContainer};
+const PageWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 0 auto;
+  margin-top: 20vh;
+`;
+
+const ErrorMessage = styled.p`
+  color: ${lightRed};
+  align-self: center;
+`;
+
+export {FormContainer, Input, Label, InputContainer, PageWrapper, ErrorMessage};

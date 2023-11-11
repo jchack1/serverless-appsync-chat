@@ -1,8 +1,9 @@
 import styled from "styled-components";
+import {mediumBlue} from "../styles/Colors";
 
 const Button = styled.button`
   color: white;
-  background-color: blue;
+  background-color: ${mediumBlue};
   border: none;
   padding: 14px 40px 14px 40px;
   border-radius: 4px;

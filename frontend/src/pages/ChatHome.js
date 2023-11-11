@@ -1,22 +1,16 @@
 import React, {useEffect, useState} from "react";
-// import {useQuery, gql} from "@apollo/client";
 import styled from "styled-components";
-import {API, graphqlOperation, Hub} from "aws-amplify";
+import {API, graphqlOperation} from "aws-amplify";
 
 import ChatList from "../components/ChatComponents/ChatList";
 import MessageArea from "../components/ChatComponents/MessageArea";
 import Spinner from "../components/Spinner";
+import {darkGray, mediumGray} from "../styles/Colors";
 
 import {
   getAllChatMessages,
   newMessageSubscription,
 } from "../components/ChatComponents/graphql";
-import {CONNECTION_STATE_CHANGE} from "@aws-amplify/pubsub";
-
-const lightBlue = "#f5f6fc";
-const mediumBlue = "#dce1f7";
-const borderGray = "#383838";
-const backgroundGray = "#262626";
 
 const getMembersChats = `query getMembersChats(
   $memberId: String
@@ -44,8 +38,8 @@ const LoadingContainer = styled.div`
   align-items: center;
 `;
 const NoChats = styled.div`
-  border: 1px solid ${backgroundGray};
-  background: ${backgroundGray};
+  border: 1px solid ${mediumGray};
+  background: ${darkGray};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -132,14 +126,6 @@ const ChatHome = () => {
       error: (error) => console.warn(error),
     });
   };
-
-  // Hub.listen("api", (data) => {
-  //   const {payload} = data;
-  //   if (payload.event === CONNECTION_STATE_CHANGE) {
-  //     const connectionState = payload.data.connectionState;
-  //     console.log(connectionState);
-  //   }
-  // });
 
   useEffect(() => {
     getChats();

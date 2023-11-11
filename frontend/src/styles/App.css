@@ -6,10 +6,11 @@ body {
   font-size: 1rem;
   background: #212121;
   color: #f2f2f2;
+  --medium-blue: #3677e0;
 }
 
 a {
-  color: blue;
+  color: var(--medium-blue);
 }
 
 h1 {
@@ -27,7 +28,7 @@ h1 {
 }
 
 .user-icon {
-  color: blue;
+  color: var(--medium-blue);
   font-size: 40px;
   margin-right: 10px;
 }

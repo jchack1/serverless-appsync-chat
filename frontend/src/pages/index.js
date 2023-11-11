@@ -1,8 +1,8 @@
+//import all pages here, wrap in auth
 import React from "react";
 import {Routes, Route} from "react-router-dom";
 import AuthComp from "./AuthComp";
 import ChatHome from "./ChatHome";
-//import all pages here, wrap in auth
 
 const App = () => {
   //all the other app routes go here

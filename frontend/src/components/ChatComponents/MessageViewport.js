@@ -3,29 +3,25 @@ import styled from "styled-components";
 import {getAllChatMessages} from "./graphql";
 import {API, graphqlOperation} from "aws-amplify";
 import Spinner from "../Spinner";
-
-const blue = "#1a54f3";
-const lightBlue = "#f5f6fc";
-const borderGray = "#383838";
-const backgroundGray = "#262626";
+import {darkGray, mediumBlue, darkBlue} from "../../styles/Colors";
 
 // components and styling
 
 const containerStyles = {
   display: "flex",
   flexDirection: "column",
-  border: `1px solid ${backgroundGray}`,
+  border: `1px solid ${darkGray}`,
   padding: "8%",
   overflowY: "auto",
   fontSize: "12px",
-  background: `${backgroundGray}`,
+  background: `${darkGray}`,
   height: "100%",
 };
 
 const MessageContainer = styled.div`
-  border: 1px solid ${backgroundGray};
+  border: 1px solid ${darkGray};
   font-size: 12px;
-  background: ${backgroundGray};
+  background: ${darkGray};
   position: relative;
   display: flex;
   flex-direction: column;
@@ -33,7 +29,6 @@ const MessageContainer = styled.div`
 `;
 
 const NewMessageNotifcation = styled.div`
-  color: blue;
   position: absolute;
   bottom: 50px;
   left: 0;
@@ -58,10 +53,10 @@ const SingleMessageContainer = styled.div`
   margin-bottom: 30px;
   align-self: ${(props) => (props.self ? "flex-end" : "flex-start")};
   max-width: 250px;
-  background: ${(props) => (props.self ? "#444c96" : "#2b2e4d")};
+  background: ${(props) => (props.self ? `${mediumBlue}` : `${darkBlue}`)};
   padding: 15px;
   border-radius: ${(props) =>
-    props.self ? "10px 10px 0 10px" : "10px 10px 10px 0"};
+    props.self ? "20px 20px 0 20px" : "20px 20px 20px 0"};
 `;
 
 const Author = styled.p`
@@ -100,7 +95,7 @@ const LoadMoreSVG = () => {
     <svg
       aria-hidden="true"
       fill={"none"}
-      stroke={blue}
+      stroke={mediumBlue}
       strokeWidth={1.5}
       viewBox="0 0 24 24"
       xmlns="http://www.w3.org/2000/svg"
@@ -121,7 +116,7 @@ const NewMessageSVG = () => {
       fill="none"
       viewBox="0 0 24 24"
       strokeWidth={1.5}
-      stroke={blue}
+      stroke={mediumBlue}
       className="w-6 h-6"
     >
       <path

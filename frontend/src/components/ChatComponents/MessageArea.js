@@ -1,26 +1,23 @@
-import React, {useState, useRef, useEffect} from "react";
+import React, {useState} from "react";
 import styled from "styled-components";
 import {v4 as uuidv4} from "uuid";
 import {addNewMessage} from "./graphql";
 import MessageViewport from "./MessageViewport";
 import {API, graphqlOperation} from "aws-amplify";
 import Spinner from "../Spinner";
-const blue = "#1a54f3";
-const lightBlue = "#f5f6fc";
-const mediumBlue = "#dce1f7";
-const backgroundGray = "#262626";
-const messageBoxGray = "#383838";
+import {mediumGray, darkGray, mediumBlue, white} from "../../styles/Colors";
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
   width: 75%;
   height: 500px;
-  background: ${backgroundGray};
+  background: ${darkGray};
+  border: 1px solid ${mediumGray};
 `;
 
 const PreLoadContainer = styled(Container)`
-  border: 1px solid ${backgroundGray};
+  border: 1px solid ${mediumGray};
   font-size: 12px;
 `;
 
@@ -28,11 +25,11 @@ const TextAreaContainer = styled.div`
   width: 92%;
   height: 20%;
   display: flex;
-  border: 1px solid ${backgroundGray};
+  border: 1px solid ${mediumGray};
   align-self: center;
   margin-bottom: 30px;
   border-radius: 10px;
-  background: ${messageBoxGray};
+  background: ${mediumGray};
 `;
 
 const TextInput = styled.textarea`
@@ -41,7 +38,11 @@ const TextInput = styled.textarea`
   border: none;
   resize: none;
   background: none;
-  color: #f2f2f2;
+  color: ${white};
+
+  &:focus {
+    outline: 1px solid ${mediumBlue};
+  }
 `;
 
 const SendButton = styled.button`
@@ -53,6 +54,10 @@ const SendButton = styled.button`
 
   &:hover {
     cursor: pointer;
+  }
+
+  &:focus {
+    outline: 1px solid ${mediumBlue};
   }
 
   svg {
@@ -90,7 +95,7 @@ const TextArea = ({handleAddMessage}) => {
         <svg
           aria-hidden="true"
           fill="none"
-          stroke={blue}
+          stroke={mediumBlue}
           strokeWidth={1.5}
           transform="rotate(330)"
           viewBox="0 0 24 24"

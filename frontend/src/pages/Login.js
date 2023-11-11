@@ -1,4 +1,5 @@
 import React, {useState} from "react";
+import "../styles/Background.css";
 import {Auth, API, graphqlOperation} from "aws-amplify";
 import {Link} from "react-router-dom";
 import {
@@ -6,6 +7,8 @@ import {
   Input,
   Label,
   InputContainer,
+  PageWrapper,
+  ErrorMessage,
 } from "../components/FormComponents";
 import Button from "../components/Button";
 import Spinner from "../components/Spinner";
@@ -91,7 +94,7 @@ const Login = ({updateIsAuthenticated}) => {
   };
 
   return (
-    <div>
+    <PageWrapper>
       <h1 style={{textAlign: "center"}}>Chat app</h1>
 
       <FormContainer>
@@ -125,9 +128,9 @@ const Login = ({updateIsAuthenticated}) => {
           no account? sign up <Link to={"/signup"}>here</Link>
         </p>
 
-        {loginError.length > 0 && <p>{loginError}</p>}
+        {loginError.length > 0 && <ErrorMessage>{loginError}</ErrorMessage>}
       </FormContainer>
-    </div>
+    </PageWrapper>
   );
 };
 

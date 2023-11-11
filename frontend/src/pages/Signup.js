@@ -1,8 +1,15 @@
 import React, {useState} from "react";
+// import "../styles/Background.css";
 import {Auth} from "aws-amplify";
 import {Link} from "react-router-dom";
 import {useNavigate} from "react-router-dom";
-import {FormContainer, Input, Label} from "../components/FormComponents";
+import {
+  FormContainer,
+  Input,
+  Label,
+  PageWrapper,
+  ErrorMessage,
+} from "../components/FormComponents";
 import Button from "../components/Button";
 import Spinner from "../components/Spinner";
 
@@ -92,7 +99,7 @@ const Signup = () => {
   };
 
   return (
-    <div>
+    <PageWrapper>
       <h1 style={{textAlign: "center"}}>Create an account</h1>
 
       <FormContainer>
@@ -139,9 +146,9 @@ const Signup = () => {
           already have an account? <Link to={"/"}>log in here</Link>
         </p>
 
-        {signupError.length > 0 && <p>{signupError}</p>}
+        {signupError.length > 0 && <ErrorMessage>{signupError}</ErrorMessage>}
       </FormContainer>
-    </div>
+    </PageWrapper>
   );
 };
 

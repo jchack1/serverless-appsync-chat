@@ -1,0 +1,10 @@
+body {
+  background-image: linear-gradient(
+      rgba(34, 33, 33, 0.95),
+      rgba(34, 33, 33, 0.95)
+    ),
+    url("../ChatBubble.svg");
+  background-position: top 60% right -25%;
+  background-size: 50px;
+  height: 100%;
+}

@@ -1,17 +1,13 @@
 import React from "react";
 import styled from "styled-components";
-
-const blue = "#1a54f3";
-const lightBlue = "#f5f6fc";
-const mediumBlue = "#dce1f7";
-const borderGray = "#383838";
-const backgroundGray = "#262626";
+import {mediumGray, darkGray, backgroundDarkGrey} from "../../styles/Colors";
 
 const ChatListContainer = styled.div`
   width: 25%;
   height: 100%;
-  border: 1px solid ${backgroundGray};
+  border: 1px solid ${mediumGray};
   overflow-y: auto;
+  background: ${backgroundDarkGrey};
 `;
 
 const ChatNameContainer = styled.div`
@@ -21,7 +17,8 @@ const ChatNameContainer = styled.div`
   font-size: 14px;
   height: 80px;
   padding: 30px;
-  background: ${(props) => (props.selected ? `${backgroundGray}` : "none")};
+  background: ${(props) =>
+    props.selected ? `${darkGray}` : `${backgroundDarkGrey}`};
 
   svg {
     width: 30px;
@@ -64,7 +61,7 @@ const HamburgerIcon = () => {
             id="Artboard-Copy-54"
             transform="translate(-15.000000, -17.000000)"
             // fill={props.sideMenuOpen ? "white" : blue}
-            fill={blue}
+            // fill={blue}
             fillRule="nonzero"
           >
             <g id="Group-12" transform="translate(15.000000, 17.000000)">
