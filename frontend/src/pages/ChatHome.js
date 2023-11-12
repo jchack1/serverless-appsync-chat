@@ -7,26 +7,17 @@ import MessageArea from "../components/ChatComponents/MessageArea";
 import Spinner from "../components/Spinner";
 import {darkGray, mediumGray} from "../styles/Colors";
 
-import {getAllChatMessages, newMessageSubscription} from "../graphql";
+import {
+  getAllChatMessages,
+  newMessageSubscription,
+  getMembersChats,
+} from "../graphql";
 import CreateNewChat from "../components/CreateNewChat";
-
-const getMembersChats = `query getMembersChats(
-  $memberId: String
-) {
-  getMembersChats(memberId: $memberId) {
-    chatId
-    members {
-      memberId
-      username
-    }
-    lastMessage
-  }
-}
-`;
 
 const ChatHomeContainer = styled.div`
   max-width: 1000px;
   margin: 15vh auto;
+  padding: 0 20px;
 `;
 
 const LoadingContainer = styled.div`
@@ -57,6 +48,7 @@ const NoChats = styled.div`
 // };
 
 const ChatHome = () => {
+  const [showCreateChat, updateShowCreateChat] = useState(false);
   const [messages, updateMessages] = useState(false);
   const [lastMessageKey, updateLastMessageKey] = useState(false);
   const [chosenChat, updateChosenChat] = useState("");
@@ -140,6 +132,8 @@ const ChatHome = () => {
     }
   }, [chosenChat]);
 
+  console.log(showCreateChat);
+
   if (loading) {
     return (
       <LoadingContainer>
@@ -155,7 +149,20 @@ const ChatHome = () => {
 
   return (
     <ChatHomeContainer>
-      <CreateNewChat />
+      {showCreateChat ? (
+        <CreateNewChat
+          chats={chats}
+          updateChats={updateChats}
+          updateShowCreateChat={updateShowCreateChat}
+        />
+      ) : (
+        <p
+          onClick={() => updateShowCreateChat(true)}
+          style={{fontWeight: 500, cursor: "pointer", marginBottom: "20px"}}
+        >
+          Add new chat?
+        </p>
+      )}
       <div style={{display: "flex", height: "500px"}}>
         {chats.length > 0 ? (
           <>

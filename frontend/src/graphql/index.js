@@ -35,8 +35,23 @@ const addNewMessage = `mutation addNewMessage(
         content
         chatId
     }
+  }`;
+
+// const addNewChat = `mutation addNewChat($memberId: String, $username: String) {
+//   addNewChat(input: {newMembers: {memberId: $memberId, username: $username}})
+// }
+// `;
+
+const addNewChat = `mutation addNewChat($input: AddNewChatInput) {
+  addNewChat(input: $input){
+    chatId
+    members {
+      memberId
+      username
+    }
+    lastMessage
   }
-  `;
+}`;
 
 const newMessageSubscription = `subscription newMessage{
     newMessage{
@@ -49,4 +64,25 @@ const newMessageSubscription = `subscription newMessage{
   }
   `;
 
-export {getAllChatMessages, addNewMessage, newMessageSubscription, getMember};
+const getMembersChats = `query getMembersChats(
+    $memberId: String
+  ) {
+    getMembersChats(memberId: $memberId) {
+      chatId
+      members {
+        memberId
+        username
+      }
+      lastMessage
+    }
+  }
+`;
+
+export {
+  getAllChatMessages,
+  addNewMessage,
+  newMessageSubscription,
+  getMember,
+  addNewChat,
+  getMembersChats,
+};

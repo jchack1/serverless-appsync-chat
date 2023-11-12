@@ -25,7 +25,7 @@ const Input = styled.input`
   background-color: ${mediumGray};
   border: 1px solid ${mediumGray};
   font-size: 0.8rem;
-
+  height: 16px;
   &:focus {
     outline: 2px solid ${mediumBlue};
   }

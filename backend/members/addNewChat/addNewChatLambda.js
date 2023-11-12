@@ -59,7 +59,11 @@ const addNewChatLambda = async (payload) => {
     });
   }
 
-  return true;
+  return {
+    chatId,
+    members: newMembers,
+    lastMessage: 0,
+  };
 };
 
 module.exports.handler = addNewChatLambda;

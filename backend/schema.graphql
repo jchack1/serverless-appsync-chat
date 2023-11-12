@@ -57,7 +57,7 @@ type Mutation {
     chatId: String
   ): Message
   deleteMessage(messageId: String): String
-  addNewChat(input: AddNewChatInput): Boolean
+  addNewChat(input: AddNewChatInput): MemberChat
 }
 
 type Subscription {
