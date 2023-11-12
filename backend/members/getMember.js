@@ -14,6 +14,8 @@ export function request(ctx) {
 export function response(ctx) {
   if (ctx.error) return ctx.error;
 
+  if (ctx.result.items.length === 0) return ctx.result;
+
   const data = ctx.result.items[0];
 
   return {

@@ -12,17 +12,7 @@ import {
 } from "../components/FormComponents";
 import Button from "../components/Button";
 import Spinner from "../components/Spinner";
-
-const getMember = `query getMember(
-  $email: String
-) {
-  getMember(email: $email) {
-      memberId
-      email
-      username
-  }
-}
-`;
+import {getMember} from "../graphql";
 
 function validateEmail(email) {
   const re =

@@ -1,23 +1,40 @@
 import styled from "styled-components";
 import {mediumBlue} from "../styles/Colors";
 
-const Button = styled.button`
+const ButtonElement = styled.button`
   color: white;
   background-color: ${mediumBlue};
   border: none;
-  padding: 14px 40px 14px 40px;
+  padding: ${(props) =>
+    props.size === "small" ? "8px 15px 8px 15px" : "14px 40px 14px 40px"};
   border-radius: 4px;
-  width: 100%;
+  width: ${(props) => (props.size === "small" ? "max-content" : "100%")};
+  min-width: 135px;
   margin-bottom: 20px;
-  font-size: 1rem;
+  font-size: ${(props) => (props.size === "small" ? "12px" : "16px")};
 
   &:hover {
     cursor: pointer;
   }
 
   @media (max-width: 600px) {
-    align-self: center;
+    align-self: ${(props) =>
+      props.size === "small" ? "flex-start" : "center"};
   }
 `;
+
+const Button = ({size, onClick, children}) => {
+  const handleButtonClick = () => {
+    if (onClick) {
+      onClick();
+    }
+  };
+
+  return (
+    <ButtonElement size={size} onClick={handleButtonClick}>
+      {children}
+    </ButtonElement>
+  );
+};
 
 export default Button;

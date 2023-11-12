@@ -1,6 +1,6 @@
 import React, {useState, useRef, useEffect} from "react";
 import styled from "styled-components";
-import {getAllChatMessages} from "./graphql";
+import {getAllChatMessages} from "../../graphql";
 import {API, graphqlOperation} from "aws-amplify";
 import Spinner from "../Spinner";
 import {darkGray, mediumBlue, darkBlue} from "../../styles/Colors";

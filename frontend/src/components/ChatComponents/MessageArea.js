@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import styled from "styled-components";
 import {v4 as uuidv4} from "uuid";
-import {addNewMessage} from "./graphql";
+import {addNewMessage} from "../../graphql";
 import MessageViewport from "./MessageViewport";
 import {API, graphqlOperation} from "aws-amplify";
 import Spinner from "../Spinner";

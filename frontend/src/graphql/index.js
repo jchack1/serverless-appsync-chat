@@ -14,6 +14,17 @@ const getAllChatMessages = `query getAllChatMessages(
   }
   `;
 
+const getMember = `query getMember(
+    $email: String
+  ) {
+    getMember(email: $email) {
+        memberId
+        email
+        username
+    }
+  }
+  `;
+
 const addNewMessage = `mutation addNewMessage(
      $messageId: String, $author: String, $content: String, $chatId: String
   ) {
@@ -38,4 +49,4 @@ const newMessageSubscription = `subscription newMessage{
   }
   `;
 
-export {getAllChatMessages, addNewMessage, newMessageSubscription};
+export {getAllChatMessages, addNewMessage, newMessageSubscription, getMember};

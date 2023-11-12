@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import {mediumGray, lightRed} from "../styles/Colors";
+import {mediumGray, lightRed, white, mediumBlue} from "../styles/Colors";
 
 const FormContainer = styled.div`
   display: flex;
@@ -12,22 +12,22 @@ const FormContainer = styled.div`
 `;
 
 const Label = styled.label`
-  margin-bottom: 10px;
   font-weight: 400;
   margin-bottom: 5px;
 `;
+
 const Input = styled.input`
   margin-bottom: 20px;
   padding: 8px 15px;
   border-radius: 4px;
   outline: none;
-  color: white;
+  color: ${white};
   background-color: ${mediumGray};
   border: 1px solid ${mediumGray};
   font-size: 0.8rem;
 
   &:focus {
-    outline: 2px solid blue;
+    outline: 2px solid ${mediumBlue};
   }
 `;
 

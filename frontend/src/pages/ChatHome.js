@@ -7,10 +7,8 @@ import MessageArea from "../components/ChatComponents/MessageArea";
 import Spinner from "../components/Spinner";
 import {darkGray, mediumGray} from "../styles/Colors";
 
-import {
-  getAllChatMessages,
-  newMessageSubscription,
-} from "../components/ChatComponents/graphql";
+import {getAllChatMessages, newMessageSubscription} from "../graphql";
+import CreateNewChat from "../components/CreateNewChat";
 
 const getMembersChats = `query getMembersChats(
   $memberId: String
@@ -157,6 +155,7 @@ const ChatHome = () => {
 
   return (
     <ChatHomeContainer>
+      <CreateNewChat />
       <div style={{display: "flex", height: "500px"}}>
         {chats.length > 0 ? (
           <>
