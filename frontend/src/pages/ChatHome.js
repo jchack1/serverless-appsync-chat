@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from "react";
 import styled from "styled-components";
-import {API, graphqlOperation} from "aws-amplify";
-
+import {Auth, API, graphqlOperation} from "aws-amplify";
+import {useNavigate} from "react-router-dom";
 import ChatList from "../components/ChatComponents/ChatList";
 import MessageArea from "../components/ChatComponents/MessageArea";
-import Spinner from "../components/Spinner";
+import Spinner from "../components/icons/Spinner";
 import {darkGray, mediumGray} from "../styles/Colors";
 
 import {
@@ -37,6 +37,12 @@ const NoChats = styled.div`
   width: 100%;
 `;
 
+const Text = styled.p`
+  font-weight: 500;
+  cursor: pointer;
+  margin-bottom: 20px;
+`;
+
 //message data structure
 
 // Message = {
@@ -59,7 +65,7 @@ const ChatHome = () => {
   const [loading, updateLoading] = useState(true);
   const [graphqlError, updateGraphqlError] = useState(false);
   const memberId = sessionStorage.getItem("memberId");
-
+  const navigate = useNavigate();
   const selfMemberId = sessionStorage.getItem("memberId");
 
   const getChats = async () => {
@@ -132,8 +138,6 @@ const ChatHome = () => {
     }
   }, [chosenChat]);
 
-  console.log(showCreateChat);
-
   if (loading) {
     return (
       <LoadingContainer>
@@ -156,12 +160,7 @@ const ChatHome = () => {
           updateShowCreateChat={updateShowCreateChat}
         />
       ) : (
-        <p
-          onClick={() => updateShowCreateChat(true)}
-          style={{fontWeight: 500, cursor: "pointer", marginBottom: "20px"}}
-        >
-          Add new chat?
-        </p>
+        <Text onClick={() => updateShowCreateChat(true)}>Add new chat?</Text>
       )}
       <div style={{display: "flex", height: "500px"}}>
         {chats.length > 0 ? (

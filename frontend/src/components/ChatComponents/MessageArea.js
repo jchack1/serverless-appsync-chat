@@ -4,7 +4,7 @@ import {v4 as uuidv4} from "uuid";
 import {addNewMessage} from "../../graphql";
 import MessageViewport from "./MessageViewport";
 import {API, graphqlOperation} from "aws-amplify";
-import Spinner from "../Spinner";
+import Spinner from "../icons/Spinner";
 import {mediumGray, darkGray, mediumBlue, white} from "../../styles/Colors";
 
 const Container = styled.div`

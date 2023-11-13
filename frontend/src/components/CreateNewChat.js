@@ -1,9 +1,9 @@
 import React, {useState, useEffect} from "react";
 import styled from "styled-components";
-import Spinner from "./Spinner";
+import Spinner from "./icons/ExitIcon";
 import {Input, ErrorMessage} from "./FormComponents";
 import Button from "./Button";
-import ExitIcon from "./ExitIcon";
+import ExitIcon from "./icons/ExitIcon";
 import {getMember, addNewChat} from "../graphql";
 import validateEmail from "../utils/validateEmail";
 import {API, graphqlOperation} from "aws-amplify";

@@ -11,7 +11,7 @@ import {
   ErrorMessage,
 } from "../components/FormComponents";
 import Button from "../components/Button";
-import Spinner from "../components/Spinner";
+import Spinner from "../components/icons/Spinner";
 import {getMember} from "../graphql";
 
 function validateEmail(email) {

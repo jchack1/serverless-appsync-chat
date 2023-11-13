@@ -11,7 +11,7 @@ import {
   ErrorMessage,
 } from "../components/FormComponents";
 import Button from "../components/Button";
-import Spinner from "../components/Spinner";
+import Spinner from "../components//icons/Spinner";
 
 function validateEmail(email) {
   const re =
@@ -86,8 +86,8 @@ const Signup = () => {
       if (user) {
         updateButtonText("sign-up successful, redirecting...");
         setTimeout(() => {
-          navigate("/");
-        }, 2500);
+          navigate("/login");
+        }, 2000);
       }
     } catch (e) {
       updateLoading(false);
