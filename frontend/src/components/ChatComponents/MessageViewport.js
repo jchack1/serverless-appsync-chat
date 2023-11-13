@@ -44,6 +44,7 @@ const NewMessageNotifcation = styled.div`
   display: flex;
   align-items: center;
   cursor: pointer;
+  text-shadow: 2px 2px 7px #000000;
 
   svg {
     width: 20px;
@@ -88,7 +89,9 @@ const LoadMoreMessagesContainer = styled.div`
   display: flex;
   justify-content: center;
   margin-bottom: 20px;
-
+  cursor: pointer;
+  width: max-content;
+  align-self: center;
   svg {
     width: 20px;
   }

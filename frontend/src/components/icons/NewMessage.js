@@ -9,7 +9,7 @@ const NewMessage = () => {
       viewBox="0 0 24 24"
       strokeWidth={1.5}
       stroke={mediumBlue}
-      className="w-6 h-6"
+      className="w-6 h-6 dropshadow-svg"
     >
       <path
         strokeLinecap="round"

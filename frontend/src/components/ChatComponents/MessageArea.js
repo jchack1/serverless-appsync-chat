@@ -11,9 +11,37 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   width: 75%;
-  height: 500px;
+  height: 900px;
   background: ${darkGray};
   border: 1px solid ${mediumGray};
+
+  @media (max-height: 1200px) and (min-width: 600px) {
+    height: 800px;
+  }
+  @media (max-height: 1100px) and (min-width: 600px) {
+    height: 700px;
+  }
+
+  @media (max-height: 1100px) and (min-width: 600px) {
+    height: 700px;
+  }
+
+  @media (max-height: 815px) and (min-width: 600px) {
+    height: 550px;
+  }
+  @media (max-height: 1000px) and (max-width: 600px) {
+    height: 750px;
+  }
+  @media (max-height: 875px) and (max-width: 400px) {
+    height: 600px;
+  }
+  @media (max-height: 800px) and (max-width: 600px) {
+    height: 600px;
+  }
+
+  @media (max-height: 700px) and (max-width: 600px) {
+    height: 550px;
+  }
 `;
 
 const PreLoadContainer = styled(Container)`

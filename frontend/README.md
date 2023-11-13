@@ -1,11 +1,8 @@
-front-end todos:
+possible future front-end tasks:
 
-- fetch user data upon login - DONE
-- loading spinner - DONE
-- figure out user sessions, storing their data - DONE
-- after how long to log user out?
-- chat components including way to create new chats and search for friends - DONE
-- general styling, fix colours - DONE
-- create variables for colours that can be imported throughout the app - is there a way to do this especially for styled-components - DONE
-- make app more responsive at different screen sizes - may have to hard-code values for different heights to keep scrolling intact
-- put icons/svgs into one folder - DONE
+- notification sound on receipt of new message
+- notification icon on chatlist on receipt of new message (if chat not currently open)
+- list chats in order of newest message
+- is there a better way to make chat container more responsive than having many media queries?
+- unsend/edit message
+- delete chat from list

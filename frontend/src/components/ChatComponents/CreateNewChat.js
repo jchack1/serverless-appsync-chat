@@ -1,13 +1,13 @@
 import React, {useState, useEffect} from "react";
 import styled from "styled-components";
-import Spinner from "./icons/ExitIcon";
-import {Input, ErrorMessage} from "./FormComponents";
-import Button from "./Button";
-import ExitIcon from "./icons/ExitIcon";
-import {getMember, addNewChat} from "../graphql";
-import validateEmail from "../utils/validateEmail";
+import Spinner from "../icons/Spinner";
+import {Input, ErrorMessage} from "../FormComponents";
+import Button from "../Button";
+import ExitIcon from "../icons/ExitIcon";
+import {getMember, addNewChat} from "../../graphql";
+import validateEmail from "../../utils/validateEmail";
 import {API, graphqlOperation} from "aws-amplify";
-import {backgroundDarkGrey, mediumGray} from "../styles/Colors";
+import {backgroundDarkGrey, mediumGray} from "../../styles/Colors";
 
 const Container = styled.div`
   display: flex;
@@ -16,9 +16,14 @@ const Container = styled.div`
   padding: 30px;
   position: relative;
   margin-bottom: 20px;
+  align-items: center;
 
   @media (max-width: 540px) {
     flex-direction: column;
+    padding: 30px;
+  }
+  @media (max-height: 1040px) and (max-width: 540px) {
+    padding: 20px;
   }
 `;
 
@@ -153,14 +158,13 @@ const CreateNewChat = ({chats, updateChats, updateShowCreateChat}) => {
   return (
     <Container>
       <ColumnContainer marginBottom={true}>
-        <Title htmlFor="search">Create new chat</Title>
         <div style={{display: "flex", alignItems: "center"}}>
           <Input
             type="text"
             id="search"
             value={searchForMember}
             onChange={(e) => updateSearchForMember(e.target.value)}
-            placeholder="search by email..."
+            placeholder="search friends by email..."
           />
 
           <div>
@@ -184,7 +188,7 @@ const CreateNewChat = ({chats, updateChats, updateShowCreateChat}) => {
                 handleSearchMember();
               }}
             >
-              {loading ? <Spinner /> : "Search for member"}
+              {loading ? <Spinner /> : "Search"}
             </Button>
           </div>
         )}

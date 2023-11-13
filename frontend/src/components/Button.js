@@ -10,7 +10,7 @@ const ButtonElement = styled.button`
   border-radius: 4px;
   width: ${(props) => (props.size === "small" ? "max-content" : "100%")};
   min-width: 135px;
-  margin-bottom: 20px;
+  margin-bottom: ${(props) => (props.size === "small" ? "0px" : "20px")};
   font-size: ${(props) => (props.size === "small" ? "12px" : "16px")};
 
   &:hover {

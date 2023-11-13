@@ -37,11 +37,6 @@ const addNewMessage = `mutation addNewMessage(
     }
   }`;
 
-// const addNewChat = `mutation addNewChat($memberId: String, $username: String) {
-//   addNewChat(input: {newMembers: {memberId: $memberId, username: $username}})
-// }
-// `;
-
 const addNewChat = `mutation addNewChat($input: AddNewChatInput) {
   addNewChat(input: $input){
     chatId

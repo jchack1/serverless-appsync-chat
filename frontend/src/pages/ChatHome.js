@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from "react";
 import styled from "styled-components";
-import {Auth, API, graphqlOperation} from "aws-amplify";
-import {useNavigate} from "react-router-dom";
+import {API, graphqlOperation} from "aws-amplify";
 import ChatList from "../components/ChatComponents/ChatList";
 import MessageArea from "../components/ChatComponents/MessageArea";
 import Spinner from "../components/icons/Spinner";
+import Button from "../components/Button";
 import {darkGray, mediumGray} from "../styles/Colors";
 
 import {
@@ -12,12 +12,53 @@ import {
   newMessageSubscription,
   getMembersChats,
 } from "../graphql";
-import CreateNewChat from "../components/CreateNewChat";
+import CreateNewChat from "../components/ChatComponents/CreateNewChat";
 
 const ChatHomeContainer = styled.div`
-  max-width: 1000px;
-  margin: 15vh auto;
+  max-width: 1500px;
+  margin: 10vh auto;
   padding: 0 20px;
+
+  @media (max-height: 1000px) or (max-width: 600px) {
+    margin: 5vh auto;
+  }
+
+  @media (max-width: 500px) {
+    padding: 0 10px;
+  }
+`;
+
+const ListAndMessageContainer = styled.div`
+  display: flex;
+  height: 900px;
+  margin-top: 20px;
+  @media (max-height: 1200px) and (min-width: 600px) {
+    height: 800px;
+  }
+  @media (max-height: 1100px) and (min-width: 600px) {
+    height: 700px;
+  }
+
+  @media (max-height: 1100px) and (min-width: 600px) {
+    height: 700px;
+  }
+
+  @media (max-height: 815px) and (min-width: 600px) {
+    height: 550px;
+  }
+  @media (max-height: 1000px) and (max-width: 600px) {
+    height: 750px;
+  }
+  @media (max-height: 875px) and (max-width: 400px) {
+    height: 600px;
+  }
+  @media (max-height: 800px) and (max-width: 600px) {
+    height: 600px;
+  }
+
+  @media (max-height: 700px) and (max-width: 600px) {
+    height: 550px;
+  }
 `;
 
 const LoadingContainer = styled.div`
@@ -35,12 +76,6 @@ const NoChats = styled.div`
   font-size: 14px;
   height: 500px;
   width: 100%;
-`;
-
-const Text = styled.p`
-  font-weight: 500;
-  cursor: pointer;
-  margin-bottom: 20px;
 `;
 
 //message data structure
@@ -65,7 +100,6 @@ const ChatHome = () => {
   const [loading, updateLoading] = useState(true);
   const [graphqlError, updateGraphqlError] = useState(false);
   const memberId = sessionStorage.getItem("memberId");
-  const navigate = useNavigate();
   const selfMemberId = sessionStorage.getItem("memberId");
 
   const getChats = async () => {
@@ -160,9 +194,11 @@ const ChatHome = () => {
           updateShowCreateChat={updateShowCreateChat}
         />
       ) : (
-        <Text onClick={() => updateShowCreateChat(true)}>Add new chat?</Text>
+        <Button size="small" onClick={() => updateShowCreateChat(true)}>
+          Add new chat?
+        </Button>
       )}
-      <div style={{display: "flex", height: "500px"}}>
+      <ListAndMessageContainer>
         {chats.length > 0 ? (
           <>
             <ChatList
@@ -189,7 +225,7 @@ const ChatHome = () => {
             <p>you have not been assigned to any chats yet</p>
           </NoChats>
         )}
-      </div>
+      </ListAndMessageContainer>
     </ChatHomeContainer>
   );
 };
