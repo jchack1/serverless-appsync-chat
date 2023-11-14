@@ -1,6 +1,5 @@
 // replace these with your own aws info
-
-export default {
+const config = {
   cognito: {
     REGION: "YOUR_COGNITO_REGION",
     USER_POOL_ID: "YOUR_COGNITO_USER_POOL_ID",
@@ -13,3 +12,5 @@ export default {
     AUTHENTICATION_TYPE: "AMAZON_COGNITO_USER_POOLS",
   },
 };
+
+export default config;
