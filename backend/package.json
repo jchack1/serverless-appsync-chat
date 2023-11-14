@@ -5,13 +5,11 @@
   "dependencies": {
     "@aws-appsync/utils": "^1.5.0",
     "serverless-appsync-plugin": "^2.4.0",
-    "typescript": "^5.2.2",
     "uuid": "^9.0.1"
   },
   "devDependencies": {
     "aws-sdk": "^2.996.0",
-    "serverless-webpack": "^5.6.0",
-    "ts-loader": "^9.4.2",
-    "webpack": "^5.66.0"
+    "serverless-webpack": "^5.13.0",
+    "webpack": "^5.89.0"
   }
 }

@@ -4,6 +4,7 @@ frameworkVersion: "3"
 
 plugins:
   - serverless-appsync-plugin
+  - serverless-webpack
 
 provider:
   name: aws
@@ -35,9 +36,9 @@ iamRoleStatements:
 
 functions:
   autoConfirm:
-    handler: functions/cognito/auto-confirm.handler
+    handler: src/functions/cognito/auto-confirm.handler
   postSignUp:
-    handler: functions/cognito/post-signup.handler
+    handler: src/functions/cognito/post-signup.handler
     role: CustomLambdaDynamoRole
 
 appSync:
@@ -54,23 +55,23 @@ appSync:
     Query.getAllChatMessages:
       dataSource: chatMessagesDataSource
       kind: UNIT
-      code: functions/messages/getAllChatMessages.js
+      code: src/functions/messages/getAllChatMessages.js
     Query.getMember:
       dataSource: appMembersDataSource
       kind: UNIT
-      code: functions/members/getMember.js
+      code: src/functions/members/getMember.js
     Query.getMembersChats:
       dataSource: getMembersChatsDataSource
       kind: UNIT
-      code: functions/members/getMembersChats/getMembersChatsResolver.js
+      code: src/functions/members/getMembersChats/getMembersChatsResolver.js
     Mutation.addNewMessage:
       dataSource: chatMessagesDataSource
       kind: UNIT
-      code: functions/messages/addNewMessage.js
+      code: src/functions/messages/addNewMessage.js
     Mutation.addNewChat:
       dataSource: chatMembersLambdaDataSource
       kind: UNIT
-      code: functions/members/addNewChat/addNewChatResolver.js
+      code: src/functions/members/addNewChat/addNewChatResolver.js
 
   dataSources:
     chatMessagesDataSource:
@@ -100,7 +101,7 @@ appSync:
       config:
         function:
           timeout: 30
-          handler: "functions/members/addNewChat/addNewChatLambda.handler"
+          handler: "src/functions/members/addNewChat/addNewChatLambda.handler"
           role: CustomLambdaDynamoRole
 
     appMembersDataSource:
@@ -119,7 +120,7 @@ appSync:
       config:
         function:
           timeout: 30
-          handler: "functions/members/getMembersChats/getMembersChatsLambda.handler"
+          handler: "src/functions/members/getMembersChats/getMembersChatsLambda.handler"
           role: CustomLambdaDynamoRole
 
 resources:
