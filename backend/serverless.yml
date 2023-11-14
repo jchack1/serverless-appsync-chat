@@ -35,9 +35,9 @@ iamRoleStatements:
 
 functions:
   autoConfirm:
-    handler: cognito/auto-confirm.handler
+    handler: functions/cognito/auto-confirm.handler
   postSignUp:
-    handler: cognito/post-signup.handler
+    handler: functions/cognito/post-signup.handler
     role: CustomLambdaDynamoRole
 
 appSync:
@@ -54,25 +54,23 @@ appSync:
     Query.getAllChatMessages:
       dataSource: chatMessagesDataSource
       kind: UNIT
-      code: messages/getAllChatMessages.js
+      code: functions/messages/getAllChatMessages.js
     Query.getMember:
       dataSource: appMembersDataSource
       kind: UNIT
-      code: members/getMember.js
+      code: functions/members/getMember.js
     Query.getMembersChats:
       dataSource: getMembersChatsDataSource
       kind: UNIT
-      code: members/getMembersChats/getMembersChatsResolver.js
+      code: functions/members/getMembersChats/getMembersChatsResolver.js
     Mutation.addNewMessage:
       dataSource: chatMessagesDataSource
       kind: UNIT
-      code: messages/addNewMessage.js
+      code: functions/messages/addNewMessage.js
     Mutation.addNewChat:
-      # dataSource: chatMembersDataSource
       dataSource: chatMembersLambdaDataSource
       kind: UNIT
-      # code: members/addNewChat.js
-      code: members/addNewChat/addNewChatResolver.js
+      code: functions/members/addNewChat/addNewChatResolver.js
 
   dataSources:
     chatMessagesDataSource:
@@ -102,7 +100,7 @@ appSync:
       config:
         function:
           timeout: 30
-          handler: "members/addNewChat/addNewChatLambda.handler"
+          handler: "functions/members/addNewChat/addNewChatLambda.handler"
           role: CustomLambdaDynamoRole
 
     appMembersDataSource:
@@ -121,7 +119,7 @@ appSync:
       config:
         function:
           timeout: 30
-          handler: "members/getMembersChats/getMembersChatsLambda.handler"
+          handler: "functions/members/getMembersChats/getMembersChatsLambda.handler"
           role: CustomLambdaDynamoRole
 
 resources:

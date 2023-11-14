@@ -1,9 +1,10 @@
-note for future task: to create a new chat, users should require the email address of the other user they want to chat with. If that user exists, they can chat. This component will need to be added to the front end eventually.
-
 other tasks:
 
 - migrate js functions to ts
-- consider reorganizing folder structure so it is more clear where functions and resolvers are
+- consider reorganizing folder structure so it is more clear where functions and resolvers are - DONE
+- update addNewChat to return the chat to frontend, then update frontend to put new chat in chatlist -DONE
+
+possible future backend tasks:
+
 - create functionality to delete, update members/messages - and implement on frontend
-- consider adding monitoring, so I can see if the app/my account in general is being used once deployed
-- update addNewChat to return the chat to frontend, then update frontend to put new chat in chatlist
+- consider adding monitoring, so I can see if the app/my account in general is being used, if I deploy the app to Amplify
