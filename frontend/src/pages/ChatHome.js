@@ -192,6 +192,8 @@ const ChatHome = () => {
           chats={chats}
           updateChats={updateChats}
           updateShowCreateChat={updateShowCreateChat}
+          memberMap={memberMap}
+          updateMemberMap={updateMemberMap}
         />
       ) : (
         <Button size="small" onClick={() => updateShowCreateChat(true)}>

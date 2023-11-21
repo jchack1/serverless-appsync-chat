@@ -86,7 +86,7 @@ const Signup = () => {
       if (user) {
         updateButtonText("sign-up successful, redirecting...");
         setTimeout(() => {
-          navigate("/login");
+          navigate("/");
         }, 2000);
       }
     } catch (e) {

@@ -67,7 +67,13 @@ const errorStyles = {
   maxWidth: "100px",
 };
 
-const CreateNewChat = ({chats, updateChats, updateShowCreateChat}) => {
+const CreateNewChat = ({
+  chats,
+  updateChats,
+  updateShowCreateChat,
+  memberMap,
+  updateMemberMap,
+}) => {
   const [searchForMember, updateSearchForMember] = useState("");
   const [submitError, updateSubmitError] = useState("");
   const [loading, updateLoading] = useState(false);
@@ -128,13 +134,21 @@ const CreateNewChat = ({chats, updateChats, updateShowCreateChat}) => {
           },
         })
       );
-      console.log(addChat);
 
-      //handle the new chat - pass to ChatList
+      //handle the new chat - pass to ChatList and update memberMap
 
       const data = addChat.data.addNewChat;
 
+      let newMemberMap = {...memberMap};
+
+      newChatMembers.map((member) => {
+        if (!newMemberMap.hasOwnProperty(member.memberId)) {
+          newMemberMap[member.memberId] = member.username;
+        }
+      });
+
       updateChats([...chats, data]);
+      updateMemberMap(newMemberMap);
       updateShowCreateChat(false);
     } catch (e) {
       updateLoading(false);
@@ -152,8 +166,6 @@ const CreateNewChat = ({chats, updateChats, updateShowCreateChat}) => {
       },
     ]);
   }, []);
-
-  console.log(newChatMembers);
 
   return (
     <Container>
