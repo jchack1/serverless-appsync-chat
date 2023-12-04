@@ -8,6 +8,25 @@ import {getMember, addNewChat} from "../../graphql";
 import validateEmail from "../../utils/validateEmail";
 import {API, graphqlOperation} from "aws-amplify";
 import {backgroundDarkGrey, mediumGray} from "../../styles/Colors";
+import {
+  MemberChat,
+  SearchMemberResult,
+  MemberMap,
+  Member,
+  AddChatResult,
+} from "../../types";
+
+type StyledComponentProps = {
+  marginBottom?: boolean;
+};
+
+type CreateNewChatProps = {
+  chats: MemberChat[];
+  updateChats: React.Dispatch<React.SetStateAction<MemberChat[]>>;
+  updateShowCreateChat: React.Dispatch<React.SetStateAction<boolean>>;
+  memberMap: MemberMap;
+  updateMemberMap: React.Dispatch<React.SetStateAction<MemberMap>>;
+};
 
 const Container = styled.div`
   display: flex;
@@ -27,14 +46,15 @@ const Container = styled.div`
   }
 `;
 
-const ColumnContainer = styled.div`
+const ColumnContainer = styled.div<StyledComponentProps>`
   display: flex;
   flex-direction: column;
   min-width: 315px;
   max-height: 150px;
 
   @media (max-width: 540px) {
-    margin-bottom: ${(props) => (props.marginBottom ? "20px" : "0")};
+    margin-bottom: ${(props: StyledComponentProps) =>
+      props.marginBottom ? "20px" : "0"};
   }
 `;
 
@@ -73,12 +93,12 @@ const CreateNewChat = ({
   updateShowCreateChat,
   memberMap,
   updateMemberMap,
-}) => {
-  const [searchForMember, updateSearchForMember] = useState("");
-  const [submitError, updateSubmitError] = useState("");
-  const [loading, updateLoading] = useState(false);
-  const [foundMember, updateFoundMember] = useState("");
-  const [newChatMembers, updateNewChatMembers] = useState([]);
+}: CreateNewChatProps) => {
+  const [searchForMember, updateSearchForMember] = useState<string>("");
+  const [submitError, updateSubmitError] = useState<string>("");
+  const [loading, updateLoading] = useState<boolean>(false);
+  const [foundMember, updateFoundMember] = useState<string | Member>("");
+  const [newChatMembers, updateNewChatMembers] = useState<Member[]>([]);
 
   const handleSearchMember = async () => {
     try {
@@ -96,11 +116,11 @@ const CreateNewChat = ({
         return false;
       }
 
-      const searchMember = await API.graphql(
+      const searchMember = (await API.graphql(
         graphqlOperation(getMember, {
           email: searchForMember,
         })
-      );
+      )) as SearchMemberResult;
 
       if (searchMember.data.getMember.memberId === null) {
         updateFoundMember("not-found");
@@ -108,32 +128,40 @@ const CreateNewChat = ({
         return;
       }
 
-      updateFoundMember({
-        memberId: searchMember.data.getMember.memberId,
-        username: searchMember.data.getMember.username,
-      });
+      if (
+        typeof searchMember.data.getMember.memberId === "string" &&
+        typeof searchMember.data.getMember.username === "string"
+      ) {
+        updateFoundMember({
+          memberId: searchMember.data.getMember.memberId,
+          username: searchMember.data.getMember.username,
+        });
+      }
+
       updateLoading(false);
-    } catch (e) {
+    } catch (err: unknown) {
       updateLoading(false);
-      console.log(e);
+      console.log(err);
       updateSubmitError("There was an error with this search");
     }
   };
 
   const handleAddNewChatMember = () => {
-    updateNewChatMembers([...newChatMembers, foundMember]);
-    updateFoundMember("");
+    if (typeof foundMember !== "string") {
+      updateNewChatMembers([...newChatMembers, foundMember]);
+      updateFoundMember("");
+    }
   };
 
   const handleCreateChat = async () => {
     try {
-      const addChat = await API.graphql(
+      const addChat = (await API.graphql(
         graphqlOperation(addNewChat, {
           input: {
             newMembers: newChatMembers,
           },
         })
-      );
+      )) as AddChatResult;
 
       //handle the new chat - pass to ChatList and update memberMap
 
@@ -150,7 +178,7 @@ const CreateNewChat = ({
       updateChats([...chats, data]);
       updateMemberMap(newMemberMap);
       updateShowCreateChat(false);
-    } catch (e) {
+    } catch (e: unknown) {
       updateLoading(false);
       console.log(e);
       updateSubmitError("There was an error creating the chat");
@@ -159,12 +187,16 @@ const CreateNewChat = ({
 
   useEffect(() => {
     //add self to new chats when component loads
-    updateNewChatMembers([
-      {
-        memberId: sessionStorage.getItem("memberId"),
-        username: sessionStorage.getItem("username"),
-      },
-    ]);
+    const memberId = sessionStorage.getItem("memberId");
+    const username = sessionStorage.getItem("username");
+    if (typeof memberId === "string" && typeof username === "string") {
+      updateNewChatMembers([
+        {
+          memberId,
+          username,
+        },
+      ]);
+    }
   }, []);
 
   return (
@@ -175,7 +207,7 @@ const CreateNewChat = ({
             type="text"
             id="search"
             value={searchForMember}
-            onChange={(e) => updateSearchForMember(e.target.value)}
+            onChange={(e: any) => updateSearchForMember(e.target.value)}
             placeholder="search friends by email..."
           />
 

@@ -8,10 +8,25 @@ import NewMessage from "../icons/NewMessage";
 import LoadMore from "../icons/LoadMore";
 
 import {darkGray, mediumBlue, darkBlue} from "../../styles/Colors";
+import {Message, MemberMap, GetMessagesResult} from "../../types";
 
 // components and styling
 
-const containerStyles = {
+type StyledComponentProps = {
+  self?: boolean;
+};
+
+type MessageViewportProps = {
+  messages: Message[] | boolean;
+  memberMap: MemberMap;
+  selfMemberId: string | null;
+  chatId: string;
+  lastMessageKey: string | null;
+  updateLastMessageKey: React.Dispatch<React.SetStateAction<string | null>>;
+  newMessage: Message[];
+};
+
+const containerStyles: React.CSSProperties = {
   display: "flex",
   flexDirection: "column",
   border: `1px solid ${darkGray}`,
@@ -52,15 +67,17 @@ const NewMessageNotifcation = styled.div`
   }
 `;
 
-const SingleMessageContainer = styled.div`
+const SingleMessageContainer = styled.div<StyledComponentProps>`
   display: flex;
   flex-direction: column;
   margin-bottom: 30px;
-  align-self: ${(props) => (props.self ? "flex-end" : "flex-start")};
+  align-self: ${(props: StyledComponentProps) =>
+    props.self ? "flex-end" : "flex-start"};
   max-width: 250px;
-  background: ${(props) => (props.self ? `${mediumBlue}` : `${darkBlue}`)};
+  background: ${(props: StyledComponentProps) =>
+    props.self ? `${mediumBlue}` : `${darkBlue}`};
   padding: 15px;
-  border-radius: ${(props) =>
+  border-radius: ${(props: StyledComponentProps) =>
     props.self ? "20px 20px 0 20px" : "20px 20px 20px 0"};
 `;
 
@@ -99,7 +116,7 @@ const LoadMoreMessagesContainer = styled.div`
 
 //helper functions
 
-const formatTimestamp = (timestamp) => {
+const formatTimestamp = (timestamp: string | number) => {
   const dateObject = new Date(Number(timestamp));
 
   const formatted = new Intl.DateTimeFormat("en-CA", {
@@ -115,16 +132,19 @@ const formatTimestamp = (timestamp) => {
 };
 
 const scrollToBottom = (
-  bottomRef,
-  isScrolledToBottom,
-  newMessageNotificationClicked
+  bottomRef: any,
+  isScrolledToBottom: boolean,
+  newMessageNotificationClicked: boolean
 ) => {
   if (isScrolledToBottom || newMessageNotificationClicked) {
     bottomRef.current.scrollIntoView({behavior: "smooth"});
   }
 };
 
-const checkIfScrolledToBottom = (containerRef, updateIsScrolledToBottom) => {
+const checkIfScrolledToBottom = (
+  containerRef: any,
+  updateIsScrolledToBottom: React.Dispatch<React.SetStateAction<boolean>>
+) => {
   const container = containerRef.current;
   const isAtBottom =
     container.scrollHeight - container.clientHeight <= container.scrollTop + 1;
@@ -142,25 +162,30 @@ const MessageViewport = ({
   lastMessageKey,
   updateLastMessageKey,
   newMessage,
-}) => {
+}: MessageViewportProps) => {
   //loading state, bottom ref, sorting messages
-  const [loadingOlderMessages, updateLoadingOlderMessages] = useState(false);
-  const [sortedMessages, updateSortedMessages] = useState(false);
-  const [isScrolledToBottom, updateIsScrolledToBottom] = useState(true);
+  const [loadingOlderMessages, updateLoadingOlderMessages] =
+    useState<boolean>(false);
+  const [sortedMessages, updateSortedMessages] = useState<Message[] | boolean>(
+    false
+  );
+  const [isScrolledToBottom, updateIsScrolledToBottom] =
+    useState<boolean>(true);
   const [displayNewMessageNotification, updateDisplayNewMessageNotification] =
-    useState(false);
+    useState<boolean>(false);
 
-  const bottomRef = useRef();
-  const containerRef = useRef();
+  const bottomRef: any = useRef();
+  const containerRef: any = useRef();
 
   const handleLoadOlderMessages = async () => {
     updateLoadingOlderMessages(true);
-    const olderMessages = await API.graphql(
+
+    const olderMessages = (await API.graphql(
       graphqlOperation(getAllChatMessages, {
         chatId,
         lastMessageKey,
       })
-    );
+    )) as GetMessagesResult;
 
     olderMessages.data.getAllChatMessages.messages.forEach((msg) => {
       msg.createdAt = new Date(msg.createdAt).getTime();
@@ -171,21 +196,25 @@ const MessageViewport = ({
         return Number(a.createdAt) - Number(b.createdAt);
       });
 
-    updateSortedMessages([...sortedOlderMessages, ...sortedMessages]);
+    if (typeof sortedMessages !== "boolean") {
+      updateSortedMessages([...sortedOlderMessages, ...sortedMessages]);
+    }
     updateLastMessageKey(olderMessages.data.getAllChatMessages.lastMessageKey);
     updateLoadingOlderMessages(false);
   };
 
   useEffect(() => {
-    messages.forEach((msg) => {
-      msg.createdAt = new Date(msg.createdAt).getTime();
-    });
+    if (typeof messages !== "boolean") {
+      messages.forEach((msg) => {
+        msg.createdAt = new Date(msg.createdAt).getTime();
+      });
 
-    const sorted = messages.sort((a, b) => {
-      return Number(a.createdAt) - Number(b.createdAt);
-    });
+      const sorted = messages.sort((a, b) => {
+        return Number(a.createdAt) - Number(b.createdAt);
+      });
 
-    updateSortedMessages(sorted);
+      updateSortedMessages(sorted);
+    }
   }, []);
 
   useEffect(() => {
@@ -194,7 +223,7 @@ const MessageViewport = ({
 
   useEffect(() => {
     //only do this if we have a new message object, don't do anything if empty object on page load
-    if (Object.keys(newMessage).length > 0 && newMessage.chatId === chatId) {
+    if (newMessage.length > 0 && newMessage[0].chatId === chatId) {
       //if user has scrolled up in the coversation, display a notification to let them know there is a new message
       const isAtBottom = checkIfScrolledToBottom(
         containerRef,
@@ -205,9 +234,13 @@ const MessageViewport = ({
         updateDisplayNewMessageNotification(true);
       }
       //add newMessage to sortedMessages
-      if (sortedMessages && Object.keys(newMessage).length > 0) {
-        newMessage.createdAt = new Date(newMessage.createdAt).getTime();
-        const updatedMessages = [...sortedMessages, newMessage];
+      if (
+        typeof sortedMessages !== "boolean" &&
+        sortedMessages &&
+        newMessage.length > 0
+      ) {
+        newMessage[0].createdAt = new Date(newMessage[0].createdAt).getTime();
+        const updatedMessages = [...sortedMessages, newMessage[0]];
         updateSortedMessages(updatedMessages);
       }
     }
@@ -219,7 +252,12 @@ const MessageViewport = ({
     }
   }, [isScrolledToBottom]);
 
-  if (messages.length === 0 && sortedMessages.length === 0) {
+  if (
+    typeof sortedMessages !== "boolean" &&
+    typeof messages !== "boolean" &&
+    messages.length === 0 &&
+    sortedMessages.length === 0
+  ) {
     return (
       <MessageContainer>
         <div ref={containerRef}>
@@ -256,9 +294,7 @@ const MessageViewport = ({
         {/* load more messages */}
 
         {lastMessageKey && (
-          <LoadMoreMessagesContainer
-            onClick={() => handleLoadOlderMessages(chatId, lastMessageKey)}
-          >
+          <LoadMoreMessagesContainer onClick={() => handleLoadOlderMessages()}>
             {loadingOlderMessages ? (
               <Spinner />
             ) : (
@@ -275,7 +311,7 @@ const MessageViewport = ({
 
         {/* display messages or loading icon*/}
 
-        {sortedMessages !== false ? (
+        {typeof sortedMessages !== "boolean" ? (
           sortedMessages.map((message, i) => {
             // console.dir(message);
             return (

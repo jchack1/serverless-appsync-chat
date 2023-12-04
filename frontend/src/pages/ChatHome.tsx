@@ -1,11 +1,20 @@
 import React, {useEffect, useState} from "react";
 import styled from "styled-components";
 import {API, graphqlOperation} from "aws-amplify";
+import {GraphQLResult} from "@aws-amplify/api";
+import {Observable} from "zen-observable-ts";
 import ChatList from "../components/ChatComponents/ChatList";
 import MessageArea from "../components/ChatComponents/MessageArea";
 import Spinner from "../components/icons/Spinner";
 import Button from "../components/Button";
 import {darkGray, mediumGray} from "../styles/Colors";
+import {
+  GetMemberChatsResult,
+  GetMessagesResult,
+  Message,
+  MemberMap,
+  MemberChat,
+} from "../types";
 
 import {
   getAllChatMessages,
@@ -88,72 +97,103 @@ const NoChats = styled.div`
 //   content: string;
 // };
 
-const ChatHome = () => {
-  const [showCreateChat, updateShowCreateChat] = useState(false);
-  const [messages, updateMessages] = useState(false);
-  const [lastMessageKey, updateLastMessageKey] = useState(false);
-  const [chosenChat, updateChosenChat] = useState("");
-  const [memberMap, updateMemberMap] = useState({});
-  const [chats, updateChats] = useState([]);
-  const [newMessage, updateNewMessage] = useState({});
-  const [loadingMessages, updateLoadingMessages] = useState(false);
-  const [loading, updateLoading] = useState(true);
-  const [graphqlError, updateGraphqlError] = useState(false);
-  const memberId = sessionStorage.getItem("memberId");
-  const selfMemberId = sessionStorage.getItem("memberId");
+type NewMessageSubscriptionResult = GraphQLResult & {
+  value: {
+    data: {
+      newMessage: Message;
+    };
+  };
+  provider: string;
+};
 
-  const getChats = async () => {
-    const memberChats = await API.graphql(
+const ChatHome = () => {
+  const [showCreateChat, updateShowCreateChat] = useState<boolean>(false);
+  const [messages, updateMessages] = useState<boolean | Message[]>(false);
+  const [lastMessageKey, updateLastMessageKey] = useState<string | null>(null);
+  const [chosenChat, updateChosenChat] = useState<string>("");
+  const [memberMap, updateMemberMap] = useState<MemberMap>({});
+  const [chats, updateChats] = useState<MemberChat[]>([]);
+  const [newMessage, updateNewMessage] = useState<Message[]>([]);
+  const [loadingMessages, updateLoadingMessages] = useState<boolean>(false);
+  const [loading, updateLoading] = useState<boolean>(true);
+  const [graphqlError, updateGraphqlError] = useState<boolean>(false);
+
+  const memberId: string | null = sessionStorage.getItem("memberId");
+  const selfMemberId: string | null = sessionStorage.getItem("memberId");
+
+  const getChats = async (): Promise<any> => {
+    const getMemberChatsResult = (await API.graphql(
       graphqlOperation(getMembersChats, {
         memberId,
       })
-    );
+    )) as GetMemberChatsResult;
 
-    if (memberChats.errors) updateGraphqlError(true);
+    // const memberChats = await API.graphql(
+    //   graphqlOperation(getMembersChats, {
+    //     memberId,
+    //   })
+    // );
+
+    if (getMemberChatsResult.errors) updateGraphqlError(true);
 
     if (
-      memberChats.data &&
-      typeof memberChats.data !== "undefined" &&
-      typeof memberChats.data.getMembersChats !== "undefined"
+      getMemberChatsResult.data &&
+      typeof getMemberChatsResult.data !== "undefined" &&
+      typeof getMemberChatsResult.data.getMembersChats !== "undefined"
     ) {
-      let obj = {};
-      memberChats.data.getMembersChats.map((chat) => {
+      let obj: MemberMap = {};
+      getMemberChatsResult.data.getMembersChats.map((chat) => {
         chat.members.forEach((member) => {
           obj[member.memberId] = member.username;
         });
       });
 
       updateMemberMap(obj);
-      updateChats(memberChats.data.getMembersChats);
+      updateChats(getMemberChatsResult.data.getMembersChats);
       updateLoading(false);
     }
   };
 
-  const getMessages = async (chatId, lastMessageKey) => {
+  const getMessages = async (chatId: string, lastMessageKey: string | null) => {
     updateLoadingMessages(true);
 
-    const messages = await API.graphql(
+    const GetMessagesResult = (await API.graphql(
       graphqlOperation(getAllChatMessages, {
         chatId,
         lastMessageKey,
       })
-    );
+    )) as GetMessagesResult;
 
-    updateMessages([...messages.data.getAllChatMessages.messages]);
-    updateLastMessageKey(messages.data.getAllChatMessages.lastMessageKey);
+    updateMessages([...GetMessagesResult.data.getAllChatMessages.messages]);
+    updateLastMessageKey(
+      GetMessagesResult.data.getAllChatMessages.lastMessageKey
+    );
     updateLoadingMessages(false);
   };
 
-  let messageSubscription;
+  let messageSubscription: any;
 
-  const setupMessageSubscription = (chatId) => {
-    messageSubscription = API.graphql(
+  // may have broken this, check
+  const setupMessageSubscription = async (chatId: string) => {
+    // messageSubscription = await API.graphql(
+    //   graphqlOperation(newMessageSubscription, {chatId})
+    // );
+    // if ("subscribe" in messageSubscription) {
+    //   messageSubscription.subscribe({
+    //     next: ({provider, value}: NewMessageSubscriptionResult) => {
+    //       updateNewMessage([value.data.newMessage]);
+    //     },
+    //     error: (error: any) => console.warn(error),
+    //   });
+    // }
+
+    messageSubscription = await API.graphql(
       graphqlOperation(newMessageSubscription, {chatId})
     ).subscribe({
-      next: ({provider, value}) => {
-        updateNewMessage(value.data.newMessage);
+      next: ({provider, value}: NewMessageSubscriptionResult) => {
+        updateNewMessage([value.data.newMessage]);
       },
-      error: (error) => console.warn(error),
+      error: (error: any) => console.warn(error),
     });
   };
 

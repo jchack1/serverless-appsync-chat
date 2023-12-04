@@ -6,6 +6,19 @@ import MessageViewport from "./MessageViewport";
 import {API, graphqlOperation} from "aws-amplify";
 import Spinner from "../icons/Spinner";
 import {mediumGray, darkGray, mediumBlue, white} from "../../styles/Colors";
+import {Message, MemberMap} from "../../types";
+
+type MessageAreaProps = {
+  messages: Message[] | boolean;
+  updateMessages: React.Dispatch<React.SetStateAction<Message[] | boolean>>;
+  memberMap: MemberMap;
+  selfMemberId: string | null;
+  chatId: string;
+  lastMessageKey: string | null;
+  updateLastMessageKey: React.Dispatch<React.SetStateAction<string | null>>;
+  newMessage: Message[];
+  loadingMessages: boolean;
+};
 
 const Container = styled.div`
   display: flex;
@@ -93,8 +106,9 @@ const SendButton = styled.button`
   }
 `;
 
-const TextArea = ({handleAddMessage}) => {
+const TextArea = ({handleAddMessage}: any) => {
   const [text, updateText] = useState("");
+
   return (
     <TextAreaContainer>
       <TextInput
@@ -155,8 +169,11 @@ const MessageArea = ({
   updateLastMessageKey,
   newMessage,
   loadingMessages,
-}) => {
-  const handleAddMessage = async (data, updateText) => {
+}: MessageAreaProps) => {
+  const handleAddMessage = async (
+    data: string,
+    updateText: React.Dispatch<React.SetStateAction<string>>
+  ) => {
     const addMessage = await API.graphql(
       graphqlOperation(addNewMessage, {
         messageId: `message_${uuidv4()}`,

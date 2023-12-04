@@ -13,7 +13,7 @@ import {
 import Button from "../components/Button";
 import Spinner from "../components//icons/Spinner";
 
-function validateEmail(email) {
+function validateEmail(email: string) {
   const re =
     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return re.test(email);
@@ -22,15 +22,15 @@ function validateEmail(email) {
 const Signup = () => {
   const navigate = useNavigate();
 
-  const [email, updateEmail] = useState("");
-  const [username, updateUsername] = useState("");
-  const [password, updatePassword] = useState("");
-  const [confirmPassword, updateConfirmPassword] = useState("");
-  const [signupError, updateSignupError] = useState("");
-  const [buttonText, updateButtonText] = useState("Sign up");
-  const [loading, updateLoading] = useState(false);
+  const [email, updateEmail] = useState<string>("");
+  const [username, updateUsername] = useState<string>("");
+  const [password, updatePassword] = useState<string>("");
+  const [confirmPassword, updateConfirmPassword] = useState<string>("");
+  const [signupError, updateSignupError] = useState<string>("");
+  const [buttonText, updateButtonText] = useState<string>("Sign up");
+  const [loading, updateLoading] = useState<boolean>(false);
 
-  const handleSignup = async () => {
+  const handleSignup = async (): Promise<any> => {
     //redirect to login once signup complete
 
     try {
@@ -89,7 +89,7 @@ const Signup = () => {
           navigate("/");
         }, 2000);
       }
-    } catch (e) {
+    } catch (e: any) {
       updateLoading(false);
       console.log("error signing up:", e);
       updatePassword("");
@@ -138,7 +138,7 @@ const Signup = () => {
           onChange={(e) => updateConfirmPassword(e.target.value)}
         ></Input>
 
-        <Button type="submit" onClick={() => handleSignup()}>
+        <Button onClick={() => handleSignup()}>
           {loading ? <Spinner /> : buttonText}
         </Button>
 

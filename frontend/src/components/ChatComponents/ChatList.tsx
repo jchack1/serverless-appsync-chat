@@ -2,7 +2,25 @@ import React from "react";
 import styled from "styled-components";
 import {mediumGray, darkGray, backgroundDarkGrey} from "../../styles/Colors";
 import {SingleUser, MultiUser} from "../icons/UserIcons";
+import {MemberChat} from "../../types";
 
+type StyledComponentProps = {
+  selected?: boolean;
+};
+
+type ChatNamesProps = {
+  chat: MemberChat;
+  chosenChat: string;
+  updateChosenChat: React.Dispatch<React.SetStateAction<string>>;
+  selfMemberId: string | null;
+};
+
+type ChatListProps = {
+  chats: MemberChat[];
+  chosenChat: string;
+  updateChosenChat: React.Dispatch<React.SetStateAction<string>>;
+  selfMemberId: string | null;
+};
 const ChatListContainer = styled.div`
   width: 25%;
   height: 100%;
@@ -11,14 +29,14 @@ const ChatListContainer = styled.div`
   background: ${backgroundDarkGrey};
 `;
 
-const ChatNameContainer = styled.div`
+const ChatNameContainer = styled.div<StyledComponentProps>`
   display: flex;
   align-items: center;
   flex-wrap: wrap;
   font-size: 14px;
   height: 80px;
   padding: 30px;
-  background: ${(props) =>
+  background: ${(props: StyledComponentProps) =>
     props.selected ? `${darkGray}` : `${backgroundDarkGrey}`};
 
   svg {
@@ -40,7 +58,12 @@ const ChatNameContainer = styled.div`
   }
 `;
 
-const ChatNames = ({chat, chosenChat, updateChosenChat, selfMemberId}) => {
+const ChatNames = ({
+  chat,
+  chosenChat,
+  updateChosenChat,
+  selfMemberId,
+}: ChatNamesProps) => {
   const chatMembers = chat.members.filter(
     (member) => member.memberId !== selfMemberId
   );
@@ -63,11 +86,18 @@ const ChatNames = ({chat, chosenChat, updateChosenChat, selfMemberId}) => {
   );
 };
 
-const ChatList = ({chats, chosenChat, updateChosenChat, selfMemberId}) => {
-  const sortedChats = [...chats].sort((a, b) => {
-    if (a.lastMessage === null) return;
-    return b.lastMessage - a.lastMessage;
-  }); //most recent chats at top
+const ChatList = ({
+  chats,
+  chosenChat,
+  updateChosenChat,
+  selfMemberId,
+}: ChatListProps) => {
+  // const sortedChats = [...chats].sort((a, b) => {
+  //   if (a.lastMessage === null) return;
+  //   return b.lastMessage - a.lastMessage;
+  // }); //most recent chats at top, haven't created this functionality yet
+
+  const sortedChats = [...chats];
 
   return (
     <ChatListContainer>

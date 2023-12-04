@@ -13,20 +13,25 @@ import {
 import Button from "../components/Button";
 import Spinner from "../components/icons/Spinner";
 import {getMember} from "../graphql";
+import {GetMemberQueryResult} from "../types";
 
-function validateEmail(email) {
+function validateEmail(email: string) {
   const re =
     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return re.test(email);
 }
 
-const Login = ({updateIsAuthenticated}) => {
-  const [email, updateEmail] = useState("");
-  const [password, updatePassword] = useState("");
-  const [loginError, updateLoginError] = useState("");
-  const [loading, updateLoading] = useState(false);
+type LoginProps = {
+  updateIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
+};
 
-  const handleLogin = async () => {
+const Login = ({updateIsAuthenticated}: LoginProps) => {
+  const [email, updateEmail] = useState<string>("");
+  const [password, updatePassword] = useState<string>("");
+  const [loginError, updateLoginError] = useState<string>("");
+  const [loading, updateLoading] = useState<boolean>(false);
+
+  const handleLogin = async (): Promise<any> => {
     try {
       //validation
       updateLoading(true);
@@ -59,23 +64,30 @@ const Login = ({updateIsAuthenticated}) => {
       const user = await Auth.signIn(email, password);
 
       //get their member data from dynamo db
-      const {data, errors} = await API.graphql(
+
+      const getMemberResult = (await API.graphql(
         graphqlOperation(getMember, {
           email,
         })
-      );
+      )) as GetMemberQueryResult;
 
-      if (errors) {
-        throw new Error(errors[0]);
+      if (getMemberResult.errors) {
+        throw new Error(getMemberResult.errors[0]);
       }
 
-      sessionStorage.setItem("memberId", data.getMember.memberId);
-      sessionStorage.setItem("email", data.getMember.email);
-      sessionStorage.setItem("username", data.getMember.username);
+      sessionStorage.setItem(
+        "memberId",
+        getMemberResult.data.getMember.memberId
+      );
+      sessionStorage.setItem("email", getMemberResult.data.getMember.email);
+      sessionStorage.setItem(
+        "username",
+        getMemberResult.data.getMember.username
+      );
 
       if (user) updateIsAuthenticated(true);
       updateLoading(false);
-    } catch (e) {
+    } catch (e: any) {
       updateLoading(false);
       updateLoginError(e.message);
       updatePassword("");
@@ -110,7 +122,7 @@ const Login = ({updateIsAuthenticated}) => {
           ></Input>
         </InputContainer>
 
-        <Button type="submit" onClick={() => handleLogin()}>
+        <Button onClick={() => handleLogin()}>
           {loading ? <Spinner /> : "Log in"}
         </Button>
 
